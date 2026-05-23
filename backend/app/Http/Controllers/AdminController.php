@@ -59,4 +59,10 @@ class AdminController extends Controller
         $requests = SupportRequest::with('user')->latest()->get();
         return view('admin.requests', compact('requests'));
     }
+
+    public function users()
+    {
+        $users = User::latest()->get();
+        return view('admin.users', compact('users'));
+    }
 }

@@ -11,6 +11,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin', [\App\Http\Controllers\AdminController::class, 'dashboard']);
     Route::get('/admin/bookings', [\App\Http\Controllers\AdminController::class, 'bookings']);
     Route::get('/admin/requests', [\App\Http\Controllers\AdminController::class, 'requests']);
+    Route::get('/admin/users', [\App\Http\Controllers\AdminController::class, 'users']);
 });
 
 
