@@ -14,12 +14,22 @@ Route::prefix('v1')->group(function () {
         ]);
     });
 
+    // Auth Routes
+    Route::post('/auth/register', [\App\Http\Controllers\Api\V1\AuthController::class, 'register']);
+    Route::post('/auth/login', [\App\Http\Controllers\Api\V1\AuthController::class, 'login']);
+
+    // Destinations
     Route::get('/destinations', [\App\Http\Controllers\Api\V1\DestinationController::class, 'index']);
     Route::get('/destinations/{id}', [\App\Http\Controllers\Api\V1\DestinationController::class, 'show']);
 
+    // Bookings
     Route::get('/bookings', [\App\Http\Controllers\Api\V1\BookingController::class, 'index']);
     Route::post('/bookings', [\App\Http\Controllers\Api\V1\BookingController::class, 'store']);
     Route::get('/bookings/{id}', [\App\Http\Controllers\Api\V1\BookingController::class, 'show']);
+
+    // Support & Visa/Passport Requests
+    Route::get('/requests', [\App\Http\Controllers\Api\V1\RequestController::class, 'index']);
+    Route::post('/requests', [\App\Http\Controllers\Api\V1\RequestController::class, 'store']);
 
     // Setup DB without session middleware crashing it!
     Route::get('/setup-db', function () {
