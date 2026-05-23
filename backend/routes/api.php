@@ -20,4 +20,21 @@ Route::prefix('v1')->group(function () {
     Route::get('/bookings', [\App\Http\Controllers\Api\V1\BookingController::class, 'index']);
     Route::post('/bookings', [\App\Http\Controllers\Api\V1\BookingController::class, 'store']);
     Route::get('/bookings/{id}', [\App\Http\Controllers\Api\V1\BookingController::class, 'show']);
+
+    // Setup DB without session middleware crashing it!
+    Route::get('/setup-db', function () {
+        try {
+            \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Database migrations ran successfully!',
+                'output' => \Illuminate\Support\Facades\Artisan::output()
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    });
 });
