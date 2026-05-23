@@ -1333,7 +1333,10 @@
             window.scrollTo(0, 0);
         }
 
+        let currentBookingType = '';
+        
         function openBookingModal(type) {
+            currentBookingType = type;
             const modal = document.getElementById('booking-modal');
             const modalContent = document.getElementById('modal-content');
             const title = document.getElementById('modal-title');
@@ -1505,8 +1508,64 @@
             }, 400);
         }
 
-        function handleBooking(event) {
-            // ... (rest of the function)
+        async function handleBooking(event) {
+            event.preventDefault();
+            
+            const token = localStorage.getItem('api_token');
+            if (!token) {
+                closeModal();
+                openAuthModal();
+                return;
+            }
+
+            const btn = document.getElementById('submit-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<span class="animate-spin material-symbols-outlined">progress_activity</span><span>Processing...</span>`;
+            btn.disabled = true;
+
+            try {
+                if (currentBookingType === 'visa' || currentBookingType === 'passport') {
+                    const reqBody = {
+                        type: currentBookingType,
+                        notes: "Submitted via GoTour App Form"
+                    };
+                    await fetch(API_BASE + '/requests', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + token
+                        },
+                        body: JSON.stringify(reqBody)
+                    });
+                } else {
+                    const reqBody = {
+                        type: currentBookingType,
+                        total_amount: Math.floor(Math.random() * 5000) + 1000 // Fake price for demo
+                    };
+                    await fetch(API_BASE + '/bookings', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + token
+                        },
+                        body: JSON.stringify(reqBody)
+                    });
+                }
+
+                // Show Success State
+                document.getElementById('booking-form').classList.add('hidden');
+                document.getElementById('success-state').classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('success-icon').classList.remove('scale-0');
+                    document.getElementById('success-icon').classList.add('scale-100', 'animate-bounce');
+                }, 100);
+
+            } catch (error) {
+                alert("Network error. Could not connect to API.");
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
         }
 
         function toggleFavorite(btn) {
