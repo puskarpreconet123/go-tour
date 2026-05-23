@@ -47,4 +47,24 @@ Route::prefix('v1')->group(function () {
             ], 500);
         }
     });
+
+    // Create a default admin user for testing
+    Route::get('/setup-admin', function () {
+        $admin = \App\Models\User::firstOrCreate(
+            ['email' => 'admin@gotour.com'],
+            [
+                'name' => 'Admin User',
+                'password' => \Illuminate\Support\Facades\Hash::make('password123'),
+                'role' => 'admin'
+            ]
+        );
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Admin user created successfully!',
+            'credentials' => [
+                'email' => 'admin@gotour.com',
+                'password' => 'password123'
+            ]
+        ]);
+    });
 });
