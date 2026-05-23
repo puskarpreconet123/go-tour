@@ -14,5 +14,10 @@ Route::prefix('v1')->group(function () {
         ]);
     });
 
-    // We will add Auth, Destinations, and Bookings here next!
+    Route::get('/destinations', [\App\Http\Controllers\Api\V1\DestinationController::class, 'index']);
+    Route::get('/destinations/{id}', [\App\Http\Controllers\Api\V1\DestinationController::class, 'show']);
+
+    Route::get('/bookings', [\App\Http\Controllers\Api\V1\BookingController::class, 'index']);
+    Route::post('/bookings', [\App\Http\Controllers\Api\V1\BookingController::class, 'store']);
+    Route::get('/bookings/{id}', [\App\Http\Controllers\Api\V1\BookingController::class, 'show']);
 });
