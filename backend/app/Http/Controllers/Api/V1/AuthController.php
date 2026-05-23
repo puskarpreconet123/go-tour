@@ -18,19 +18,21 @@ class AuthController extends Controller
             'password' => 'required|string|min:8',
         ]);
 
+        $token = \Illuminate\Support\Str::random(60);
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'user'
+            'role' => 'user',
+            'api_token' => hash('sha256', $token)
         ]);
 
-        // If using Sanctum (assuming it's installed or fallback to basic token logic later)
-        // For now, we just return success
         return response()->json([
             'status' => 'success',
             'message' => 'User registered successfully',
-            'data' => $user
+            'data' => $user,
+            'token' => $token
         ], 201);
     }
 
@@ -49,11 +51,17 @@ class AuthController extends Controller
             ]);
         }
 
+        $token = \Illuminate\Support\Str::random(60);
+        $user->forceFill([
+            'api_token' => hash('sha256', $token),
+        ])->save();
+
         // Return user info
         return response()->json([
             'status' => 'success',
             'message' => 'Login successful',
-            'data' => $user
+            'data' => $user,
+            'token' => $token
         ]);
     }
 }

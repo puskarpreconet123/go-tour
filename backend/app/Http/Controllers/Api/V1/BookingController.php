@@ -10,8 +10,8 @@ class BookingController extends Controller
 {
     public function index(Request $request)
     {
-        // For now, we fetch all. Once Auth is added, we will filter by auth()->id()
-        $query = Booking::with('destination');
+        // Fetch only bookings for the authenticated user
+        $query = Booking::with('destination')->where('user_id', auth()->id());
 
         if ($request->has('status')) {
             $query->where('status', $request->status);
@@ -28,7 +28,6 @@ class BookingController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
             'type' => 'required|string',
             'destination_id' => 'nullable|exists:destinations,id',
             'total_amount' => 'numeric',
@@ -36,7 +35,7 @@ class BookingController extends Controller
         ]);
 
         $booking = Booking::create([
-            'user_id' => $request->user_id,
+            'user_id' => auth()->id(),
             'destination_id' => $request->destination_id,
             'type' => $request->type,
             'status' => 'upcoming',

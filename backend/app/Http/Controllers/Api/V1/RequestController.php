@@ -10,7 +10,7 @@ class RequestController extends Controller
 {
     public function index(Request $request)
     {
-        $query = SupportRequest::query();
+        $query = SupportRequest::where('user_id', auth()->id());
 
         if ($request->has('status')) {
             $query->where('status', $request->status);
@@ -27,13 +27,12 @@ class RequestController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
             'type' => 'required|string', // visa, passport, support
             'notes' => 'nullable|string'
         ]);
 
         $supportRequest = SupportRequest::create([
-            'user_id' => $request->user_id,
+            'user_id' => auth()->id(),
             'type' => $request->type,
             'status' => 'pending',
             'notes' => $request->notes
