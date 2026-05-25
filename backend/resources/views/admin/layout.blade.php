@@ -3,15 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Go Tour Admin</title>
+    <title>New Universal Travels Pvt. Ltd. Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 flex flex-col md:flex-row min-h-screen">
 
     <!-- Mobile Header -->
     <div class="md:hidden bg-white shadow-md p-4 flex justify-between items-center z-20">
-        <h1 class="text-xl font-bold text-red-600">Go Tour Admin</h1>
-        <button id="mobile-menu-btn" class="text-gray-700 hover:text-red-600 focus:outline-none">
+        <div class="flex items-center gap-2">
+            <img src="/images/logo.png" alt="Logo" class="h-8 w-auto">
+            <h1 class="text-sm sm:text-base font-bold text-red-600 leading-tight">New Universal Travels Pvt. Ltd.</h1>
+        </div>
+        <button id="mobile-menu-btn" class="text-gray-700 hover:text-red-600 focus:outline-none ml-2">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
             </svg>
@@ -20,8 +23,9 @@
 
     <!-- Sidebar -->
     <aside id="sidebar" class="w-64 bg-white h-screen shadow-md flex-col fixed md:relative z-10 transform -translate-x-full md:translate-x-0 transition-transform duration-200 ease-in-out md:flex">
-        <div class="p-6 border-b hidden md:block">
-            <h1 class="text-2xl font-bold text-red-600">Go Tour Admin</h1>
+        <div class="p-6 border-b hidden md:block text-center">
+            <img src="/images/logo.png" alt="New Universal Travels Pvt. Ltd." class="h-16 w-auto mx-auto mb-3">
+            <h1 class="text-lg font-bold text-red-600 leading-tight">New Universal Travels Pvt. Ltd.</h1>
         </div>
         <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
             <a href="/admin" class="block px-4 py-2 rounded text-gray-700 hover:bg-red-50 hover:text-red-600">Dashboard</a>
