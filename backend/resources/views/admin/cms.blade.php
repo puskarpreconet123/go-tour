@@ -26,9 +26,6 @@
         <div id="content-about" class="cms-content space-y-6 block">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-2xl font-bold text-gray-800">About Us</h3>
-                <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2">
-                    <span class="material-symbols-outlined text-sm">edit</span> Edit Content
-                </button>
             </div>
             <div class="prose max-w-none text-gray-600 bg-gray-50 p-6 rounded-lg border border-gray-100">
                 <h4 class="text-lg font-bold text-gray-800 mb-2">Our Story</h4>
@@ -48,9 +45,6 @@
         <div id="content-privacy" class="cms-content space-y-6 hidden">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-2xl font-bold text-gray-800">Privacy Policy</h3>
-                <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2">
-                    <span class="material-symbols-outlined text-sm">edit</span> Edit Content
-                </button>
             </div>
             <div class="prose max-w-none text-gray-600 bg-gray-50 p-6 rounded-lg border border-gray-100">
                 <p class="mb-4 text-sm text-gray-400">Last updated: May 25, 2026</p>
@@ -69,9 +63,6 @@
         <div id="content-terms" class="cms-content space-y-6 hidden">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-2xl font-bold text-gray-800">Terms and Conditions</h3>
-                <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2">
-                    <span class="material-symbols-outlined text-sm">edit</span> Edit Content
-                </button>
             </div>
             <div class="prose max-w-none text-gray-600 bg-gray-50 p-6 rounded-lg border border-gray-100">
                 <h4 class="text-lg font-bold text-gray-800 mb-2">1. Acceptance of Terms</h4>
