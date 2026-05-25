@@ -3,8 +3,8 @@
 @section('content')
 <h2 class="text-3xl font-bold text-gray-800 mb-6">All Bookings</h2>
 
-<div class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100">
-    <table class="w-full text-left border-collapse">
+<div class="bg-white rounded-lg shadow-sm overflow-x-auto border border-gray-100">
+    <table class="w-full text-left border-collapse whitespace-nowrap min-w-max">
         <thead>
             <tr class="bg-gray-50 border-b border-gray-100">
                 <th class="p-4 text-sm font-semibold text-gray-600">ID</th>
