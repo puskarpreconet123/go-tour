@@ -26,11 +26,14 @@
         <div id="content-about" class="cms-content space-y-6 block">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-2xl font-bold text-gray-800">About Us</h3>
+                <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">edit</span> Edit Content
+                </button>
             </div>
             <div class="prose max-w-none text-gray-600 bg-gray-50 p-6 rounded-lg border border-gray-100">
                 <h4 class="text-lg font-bold text-gray-800 mb-2">Our Story</h4>
                 <p class="mb-4">Welcome to New Universal Travels Pvt. Ltd. Founded with a passion for exploration, we have been providing world-class travel experiences for over a decade. Our mission is to make international travel accessible, seamless, and unforgettable for everyone.</p>
-                <button class="bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition-colors hover:bg-red-700">Update Content</button>
+                
                 <h4 class="text-lg font-bold text-gray-800 mb-2 mt-6">Why Choose Us?</h4>
                 <ul class="list-disc pl-5 space-y-2">
                     <li>Expertise in international tour packages and custom itineraries.</li>
@@ -45,6 +48,9 @@
         <div id="content-privacy" class="cms-content space-y-6 hidden">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-2xl font-bold text-gray-800">Privacy Policy</h3>
+                <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">edit</span> Edit Content
+                </button>
             </div>
             <div class="prose max-w-none text-gray-600 bg-gray-50 p-6 rounded-lg border border-gray-100">
                 <p class="mb-4 text-sm text-gray-400">Last updated: May 25, 2026</p>
@@ -63,6 +69,9 @@
         <div id="content-terms" class="cms-content space-y-6 hidden">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-2xl font-bold text-gray-800">Terms and Conditions</h3>
+                <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">edit</span> Edit Content
+                </button>
             </div>
             <div class="prose max-w-none text-gray-600 bg-gray-50 p-6 rounded-lg border border-gray-100">
                 <h4 class="text-lg font-bold text-gray-800 mb-2">1. Acceptance of Terms</h4>
