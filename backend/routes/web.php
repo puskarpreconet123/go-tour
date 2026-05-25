@@ -16,6 +16,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/users', [\App\Http\Controllers\AdminController::class, 'users']);
     Route::get('/admin/tours', [\App\Http\Controllers\AdminController::class, 'tours']);
     Route::get('/admin/cms', [\App\Http\Controllers\AdminController::class, 'cms']);
+    Route::post('/admin/cms/update', [\App\Http\Controllers\AdminController::class, 'updateCms'])->name('admin.cms.update');
     Route::get('/admin/win-trip', [\App\Http\Controllers\AdminController::class, 'winTrip']);
 });
 

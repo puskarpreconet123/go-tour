@@ -22,6 +22,20 @@ Route::prefix('v1')->group(function () {
     Route::get('/destinations', [\App\Http\Controllers\Api\V1\DestinationController::class, 'index']);
     Route::get('/destinations/{id}', [\App\Http\Controllers\Api\V1\DestinationController::class, 'show']);
 
+    // CMS public endpoint
+    Route::get('/cms/{section}', function ($section) {
+        $allowed = ['about', 'privacy', 'terms'];
+        if (!in_array($section, $allowed)) {
+            return response()->json(['status' => 'error', 'message' => 'Invalid section.'], 404);
+        }
+        $row = \App\Models\CmsContent::where('section', $section)->first();
+        return response()->json([
+            'status'  => 'success',
+            'section' => $section,
+            'content' => $row ? $row->content : null,
+        ]);
+    });
+
     // Protected Routes
     Route::middleware([\App\Http\Middleware\ApiAuthMiddleware::class])->group(function () {
         // Bookings

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\CmsContent;
 use App\Models\SupportRequest;
 use App\Models\User;
 use App\Models\Destination;
@@ -94,6 +95,27 @@ class AdminController extends Controller
 
     public function cms()
     {
-        return view('admin.cms');
+        $sections = ['about', 'privacy', 'terms'];
+        $cmsContents = [];
+        foreach ($sections as $section) {
+            $row = CmsContent::where('section', $section)->first();
+            $cmsContents[$section] = $row ? $row->content : null;
+        }
+        return view('admin.cms', compact('cmsContents'));
+    }
+
+    public function updateCms(Request $request)
+    {
+        $validated = $request->validate([
+            'section' => ['required', 'in:about,privacy,terms'],
+            'content' => ['required', 'string'],
+        ]);
+
+        CmsContent::updateOrCreate(
+            ['section' => $validated['section']],
+            ['content' => $validated['content']]
+        );
+
+        return response()->json(['success' => true, 'message' => 'Content updated successfully.']);
     }
 }
