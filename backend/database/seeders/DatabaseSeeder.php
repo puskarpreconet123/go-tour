@@ -18,28 +18,25 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Admin
-        if (!User::where('email', 'admin@example.com')->exists()) {
-            User::factory()->create([
-                'name' => 'Admin User',
-                'email' => 'admin@example.com',
-                'role' => 'admin',
-            ]);
+        // Fetch all existing users to attach bookings and requests to
+        $users = User::all();
+
+        if ($users->isEmpty()) {
+            return;
         }
 
-        // Regular users
-        $users = User::factory(5)->create();
-
         // Dummy destination
-        $destination = Destination::create([
-            'name' => 'Dummy Destination',
-            'location' => 'Paris, France',
-            'price' => 1000,
-            'original_price' => 1200,
-            'image_url' => 'https://via.placeholder.com/150',
-            'type' => 'place',
-            'category' => 'international',
-        ]);
+        $destination = Destination::firstOrCreate(
+            ['name' => 'Dummy Destination'],
+            [
+                'location' => 'Paris, France',
+                'price' => 1000,
+                'original_price' => 1200,
+                'image_url' => 'https://via.placeholder.com/150',
+                'type' => 'place',
+                'category' => 'international',
+            ]
+        );
 
         // Dummy data for bookings and requests
         foreach ($users as $index => $user) {
