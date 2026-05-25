@@ -16,4 +16,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/win-trip', [\App\Http\Controllers\AdminController::class, 'winTrip']);
 });
 
-
+Route::get('/seed-dummy-data', function () {
+    try {
+        Artisan::call('db:seed');
+        return response()->json([
+            'message' => 'Dummy data seeded successfully!', 
+            'output' => Artisan::output()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});

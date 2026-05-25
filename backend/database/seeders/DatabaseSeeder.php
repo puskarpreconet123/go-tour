@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Booking;
+use App\Models\SupportRequest;
+use App\Models\Destination;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,11 +18,44 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
+        // Admin
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'role' => 'admin',
         ]);
+
+        // Regular users
+        $users = User::factory(5)->create();
+
+        // Dummy destination
+        $destination = Destination::create([
+            'name' => 'Dummy Destination',
+            'location' => 'Paris, France',
+            'price' => 1000,
+            'original_price' => 1200,
+            'image_url' => 'https://via.placeholder.com/150',
+            'type' => 'tour',
+            'category' => 'international',
+        ]);
+
+        // Dummy data for bookings and requests
+        foreach ($users as $index => $user) {
+            SupportRequest::create([
+                'user_id' => $user->id,
+                'type' => $index % 2 == 0 ? 'visa' : 'passport',
+                'status' => 'pending',
+                'notes' => 'Looking for help with ' . ($index % 2 == 0 ? 'visa' : 'passport') . ' application.',
+            ]);
+
+            Booking::create([
+                'user_id' => $user->id,
+                'destination_id' => $destination->id,
+                'type' => 'tour',
+                'status' => 'confirmed',
+                'total_amount' => 1000,
+                'booking_details' => ['passengers' => 1],
+            ]);
+        }
     }
 }
