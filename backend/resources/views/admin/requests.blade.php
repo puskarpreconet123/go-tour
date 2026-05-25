@@ -27,8 +27,17 @@
                 </td>
                 <td class="p-4 text-sm text-gray-500 max-w-xs truncate">{{ $req->notes ?? '-' }}</td>
                 <td class="p-4 text-sm text-gray-500">{{ $req->created_at->format('M d, Y') }}</td>
-                <td class="p-4 text-sm font-medium">
+                <td class="p-4 text-sm font-medium flex items-center">
                     <button onclick="showDetailsModal('Request Details', { 'Request ID': '#{{ $req->id }}', 'User': '{{ addslashes($req->user->name ?? 'Unknown') }}', 'Type': '{{ addslashes($req->type) }}', 'Status': '{{ addslashes($req->status) }}', 'Notes': '{{ addslashes($req->notes ?? '-') }}', 'Date': '{{ $req->created_at->format('M d, Y') }}' })" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1 rounded-md transition-colors">Details</button>
+                    <form action="/admin/requests/{{ $req->id }}/status" method="POST" class="inline-block ml-2">
+                        @csrf
+                        <select name="status" onchange="this.form.submit()" class="text-xs border border-gray-200 rounded p-1 bg-white text-gray-700 outline-none focus:border-red-500 hover:bg-gray-50 cursor-pointer">
+                            <option value="pending" {{ $req->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="approved" {{ $req->status == 'approved' ? 'selected' : '' }}>Approved</option>
+                            <option value="rejected" {{ $req->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                            <option value="completed" {{ $req->status == 'completed' ? 'selected' : '' }}>Completed</option>
+                        </select>
+                    </form>
                 </td>
             </tr>
             @endforeach

@@ -61,6 +61,20 @@ class AdminController extends Controller
         return view('admin.requests', compact('requests'));
     }
 
+    public function updateRequestStatus(Request $request, $id)
+    {
+        $req = SupportRequest::findOrFail($id);
+        $req->update(['status' => $request->status]);
+        return back()->with('success', 'Request status updated to ' . $request->status);
+    }
+
+    public function updateBookingStatus(Request $request, $id)
+    {
+        $booking = Booking::findOrFail($id);
+        $booking->update(['status' => $request->status]);
+        return back()->with('success', 'Booking status updated to ' . $request->status);
+    }
+
     public function users()
     {
         $users = User::latest()->get();

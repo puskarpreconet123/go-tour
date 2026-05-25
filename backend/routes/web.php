@@ -10,7 +10,9 @@ Route::post('/admin/logout', [\App\Http\Controllers\AdminController::class, 'log
 Route::middleware('auth')->group(function () {
     Route::get('/admin', [\App\Http\Controllers\AdminController::class, 'dashboard']);
     Route::get('/admin/bookings', [\App\Http\Controllers\AdminController::class, 'bookings']);
+    Route::post('/admin/bookings/{id}/status', [\App\Http\Controllers\AdminController::class, 'updateBookingStatus']);
     Route::get('/admin/requests', [\App\Http\Controllers\AdminController::class, 'requests']);
+    Route::post('/admin/requests/{id}/status', [\App\Http\Controllers\AdminController::class, 'updateRequestStatus']);
     Route::get('/admin/users', [\App\Http\Controllers\AdminController::class, 'users']);
     Route::get('/admin/tours', [\App\Http\Controllers\AdminController::class, 'tours']);
     Route::get('/admin/cms', [\App\Http\Controllers\AdminController::class, 'cms']);

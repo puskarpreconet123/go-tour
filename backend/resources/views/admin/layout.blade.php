@@ -105,6 +105,12 @@
 
     <!-- Main Content -->
     <main class="flex-1 p-4 md:p-8 overflow-y-auto h-full w-full">
+        @if(session('success'))
+            <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl mb-6 shadow-sm flex items-center gap-3">
+                <span class="material-symbols-outlined text-green-500">check_circle</span>
+                <span class="font-medium">{{ session('success') }}</span>
+            </div>
+        @endif
         @yield('content')
     </main>
 

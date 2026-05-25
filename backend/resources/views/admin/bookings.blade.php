@@ -29,8 +29,16 @@
                 </td>
                 <td class="p-4 text-sm text-gray-800">₹{{ number_format($booking->total_amount, 2) }}</td>
                 <td class="p-4 text-sm text-gray-500">{{ $booking->created_at->format('M d, Y') }}</td>
-                <td class="p-4 text-sm font-medium">
+                <td class="p-4 text-sm font-medium flex items-center">
                     <button onclick="showDetailsModal('Booking Details', { 'Booking ID': '#{{ $booking->id }}', 'User': '{{ addslashes($booking->user->name ?? 'Unknown') }}', 'Type': '{{ addslashes($booking->type) }}', 'Destination': '{{ addslashes($booking->destination->name ?? 'N/A') }}', 'Status': '{{ addslashes($booking->status) }}', 'Amount': '₹{{ number_format($booking->total_amount, 2) }}', 'Date': '{{ $booking->created_at->format('M d, Y') }}' })" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1 rounded-md transition-colors">Details</button>
+                    <form action="/admin/bookings/{{ $booking->id }}/status" method="POST" class="inline-block ml-2">
+                        @csrf
+                        <select name="status" onchange="this.form.submit()" class="text-xs border border-gray-200 rounded p-1 bg-white text-gray-700 outline-none focus:border-red-500 hover:bg-gray-50 cursor-pointer">
+                            <option value="upcoming" {{ $booking->status == 'upcoming' ? 'selected' : '' }}>Upcoming</option>
+                            <option value="past" {{ $booking->status == 'past' ? 'selected' : '' }}>Past</option>
+                            <option value="cancelled" {{ $booking->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                        </select>
+                    </form>
                 </td>
             </tr>
             @endforeach
