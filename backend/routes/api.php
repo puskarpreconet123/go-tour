@@ -70,4 +70,21 @@ Route::prefix('v1')->group(function () {
             ]
         ]);
     });
+
+    // Seed dummy data
+    Route::get('/seed-dummy-data', function () {
+        try {
+            \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Dummy data seeded successfully!', 
+                'output' => \Illuminate\Support\Facades\Artisan::output()
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    });
 });
