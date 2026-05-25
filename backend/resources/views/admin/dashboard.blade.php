@@ -21,13 +21,13 @@
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
     <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 h-[350px] flex flex-col">
         <h3 class="text-xl font-bold text-gray-800 mb-4">Revenue Overview</h3>
-        <div class="flex-1 relative w-full h-full">
+        <div class="flex-1 relative w-full min-h-0">
             <canvas id="revenueChart"></canvas>
         </div>
     </div>
     <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 h-[350px] flex flex-col">
         <h3 class="text-xl font-bold text-gray-800 mb-4">Bookings by Category</h3>
-        <div class="flex-1 relative w-full h-full flex justify-center">
+        <div class="flex-1 relative w-full min-h-0 flex justify-center">
             <canvas id="categoryChart"></canvas>
         </div>
     </div>

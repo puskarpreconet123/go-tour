@@ -22,7 +22,7 @@
     </div>
 
     <!-- Sidebar -->
-    <aside id="sidebar" class="w-72 bg-white h-screen shadow-xl flex flex-col fixed inset-y-0 left-0 z-40 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out">
+    <aside id="sidebar" class="w-72 bg-white h-screen shadow-xl flex flex-col fixed inset-y-0 left-0 z-40 transform -translate-x-full md:sticky md:top-0 md:translate-x-0 transition-transform duration-300 ease-in-out">
         <!-- Sidebar Header -->
         <div class="p-6 border-b border-gray-100 flex items-center justify-between">
             <div class="text-center w-full">
