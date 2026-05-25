@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
             'price' => 1000,
             'original_price' => 1200,
             'image_url' => 'https://via.placeholder.com/150',
-            'type' => 'tour',
+            'type' => 'place',
             'category' => 'international',
         ]);
 
@@ -51,8 +51,8 @@ class DatabaseSeeder extends Seeder
             Booking::create([
                 'user_id' => $user->id,
                 'destination_id' => $destination->id,
-                'type' => 'tour',
-                'status' => 'confirmed',
+                'type' => 'hotel',
+                'status' => 'upcoming',
                 'total_amount' => 1000,
                 'booking_details' => ['passengers' => 1],
             ]);
