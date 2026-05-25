@@ -28,6 +28,7 @@
                 <th class="p-4 text-sm font-semibold text-gray-600">Type</th>
                 <th class="p-4 text-sm font-semibold text-gray-600">Status</th>
                 <th class="p-4 text-sm font-semibold text-gray-600">Amount</th>
+                <th class="p-4 text-sm font-semibold text-gray-600">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -40,6 +41,9 @@
                     <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-medium">{{ $booking->status }}</span>
                 </td>
                 <td class="p-4 text-sm text-gray-800">₹{{ number_format($booking->total_amount, 2) }}</td>
+                <td class="p-4 text-sm font-medium">
+                    <button onclick="alert('ID: {{ $booking->id }}\nUser: {{ addslashes($booking->user->name ?? 'Unknown') }}\nType: {{ addslashes($booking->type) }}\nStatus: {{ addslashes($booking->status) }}\nAmount: ₹{{ number_format($booking->total_amount, 2) }}')" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1 rounded-md transition-colors">Details</button>
+                </td>
             </tr>
             @endforeach
         </tbody>

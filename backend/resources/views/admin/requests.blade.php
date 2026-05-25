@@ -13,6 +13,7 @@
                 <th class="p-4 text-sm font-semibold text-gray-600">Status</th>
                 <th class="p-4 text-sm font-semibold text-gray-600">Notes</th>
                 <th class="p-4 text-sm font-semibold text-gray-600">Date</th>
+                <th class="p-4 text-sm font-semibold text-gray-600">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -26,6 +27,9 @@
                 </td>
                 <td class="p-4 text-sm text-gray-500 max-w-xs truncate">{{ $req->notes ?? '-' }}</td>
                 <td class="p-4 text-sm text-gray-500">{{ $req->created_at->format('M d, Y') }}</td>
+                <td class="p-4 text-sm font-medium">
+                    <button onclick="alert('ID: {{ $req->id }}\nUser: {{ addslashes($req->user->name ?? 'Unknown') }}\nType: {{ addslashes($req->type) }}\nStatus: {{ addslashes($req->status) }}\nNotes: {{ addslashes($req->notes ?? '-') }}\nDate: {{ $req->created_at->format('M d, Y') }}')" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1 rounded-md transition-colors">Details</button>
+                </td>
             </tr>
             @endforeach
         </tbody>
