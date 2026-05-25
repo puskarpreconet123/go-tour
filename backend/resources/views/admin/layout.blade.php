@@ -57,6 +57,10 @@
                 <span class="material-symbols-outlined">tour</span>
                 Manage Tours
             </a>
+            <a href="/admin/cms" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-red-50 hover:text-red-700 transition-all font-medium {{ request()->is('admin/cms') ? 'bg-red-50 text-red-700 font-bold' : '' }}">
+                <span class="material-symbols-outlined">web</span>
+                CMS
+            </a>
             <a href="/admin/win-trip" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-red-50 hover:text-red-700 transition-all font-medium {{ request()->is('admin/win-trip') ? 'bg-red-50 text-red-700 font-bold' : '' }}">
                 <span class="material-symbols-outlined">redeem</span>
                 Win Trip

@@ -77,4 +77,9 @@ class AdminController extends Controller
     {
         return view('admin.win-trip');
     }
+
+    public function cms()
+    {
+        return view('admin.cms');
+    }
 }
