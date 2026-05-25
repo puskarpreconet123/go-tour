@@ -42,7 +42,7 @@
                                 {{ $user->created_at->format('M d, Y H:i') }}
                             </td>
                             <td class="px-6 py-4 text-sm font-medium">
-                                <button onclick="alert('Name: {{ addslashes($user->name) }}\nEmail: {{ addslashes($user->email) }}\nRole: {{ addslashes($user->role) }}\nJoined Date: {{ $user->created_at->format('M d, Y H:i') }}')" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1 rounded-md transition-colors">Details</button>
+                                <button onclick="showDetailsModal('User Details', { 'Name': '{{ addslashes($user->name) }}', 'Email': '{{ addslashes($user->email) }}', 'Role': '{{ addslashes($user->role) }}', 'Joined Date': '{{ $user->created_at->format('M d, Y H:i') }}' })" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1 rounded-md transition-colors">Details</button>
                             </td>
                         </tr>
                     @empty

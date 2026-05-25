@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Models\SupportRequest;
 use App\Models\User;
+use App\Models\Destination;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -64,5 +65,16 @@ class AdminController extends Controller
     {
         $users = User::latest()->get();
         return view('admin.users', compact('users'));
+    }
+
+    public function tours()
+    {
+        $tours = Destination::latest()->get();
+        return view('admin.tours', compact('tours'));
+    }
+
+    public function winTrip()
+    {
+        return view('admin.win-trip');
     }
 }
