@@ -90,6 +90,18 @@ class AdminController extends Controller
 
     public function storeTour(Request $request)
     {
+        // Check for PHP INI file upload size limit failures
+        if (isset($_FILES['thumbnail']) && $_FILES['thumbnail']['error'] === UPLOAD_ERR_INI_SIZE) {
+            return back()->withErrors(['thumbnail' => 'The uploaded thumbnail file exceeds the server\'s upload size limit. Please choose a smaller image (under 2MB) or paste a direct image URL instead.'])->withInput();
+        }
+        if (isset($_FILES['gallery']['error'])) {
+            foreach ($_FILES['gallery']['error'] as $err) {
+                if ($err === UPLOAD_ERR_INI_SIZE) {
+                    return back()->withErrors(['gallery' => 'One or more gallery files exceed the server\'s upload size limit. Please choose smaller images (under 2MB) or paste direct image URLs instead.'])->withInput();
+                }
+            }
+        }
+
         $request->validate([
             'name' => 'required|string|max:255',
             'category' => 'required|in:national,international,educational,honeymoon',
@@ -99,7 +111,7 @@ class AdminController extends Controller
             'price' => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:20480',
-            'image_url' => 'nullable|string|max:1000',
+            'image_url' => 'nullable|string|max:2000',
             'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:20480',
             'gallery_urls' => 'nullable|string',
             'meta_title' => 'nullable|string|max:255',
@@ -178,6 +190,18 @@ class AdminController extends Controller
     {
         $tour = Destination::findOrFail($id);
 
+        // Check for PHP INI file upload size limit failures
+        if (isset($_FILES['thumbnail']) && $_FILES['thumbnail']['error'] === UPLOAD_ERR_INI_SIZE) {
+            return back()->withErrors(['thumbnail' => 'The uploaded thumbnail file exceeds the server\'s upload size limit. Please choose a smaller image (under 2MB) or paste a direct image URL instead.'])->withInput();
+        }
+        if (isset($_FILES['gallery']['error'])) {
+            foreach ($_FILES['gallery']['error'] as $err) {
+                if ($err === UPLOAD_ERR_INI_SIZE) {
+                    return back()->withErrors(['gallery' => 'One or more gallery files exceed the server\'s upload size limit. Please choose smaller images (under 2MB) or paste direct image URLs instead.'])->withInput();
+                }
+            }
+        }
+
         $request->validate([
             'name' => 'required|string|max:255',
             'category' => 'required|in:national,international,educational,honeymoon',
@@ -187,7 +211,7 @@ class AdminController extends Controller
             'price' => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:20480',
-            'image_url' => 'nullable|string|max:1000',
+            'image_url' => 'nullable|string|max:2000',
             'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:20480',
             'gallery_urls' => 'nullable|string',
             'meta_title' => 'nullable|string|max:255',
