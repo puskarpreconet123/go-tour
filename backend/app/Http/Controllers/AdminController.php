@@ -98,9 +98,10 @@ class AdminController extends Controller
             'long_desc' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:4096',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:20480',
             'image_url' => 'nullable|string|max:1000',
-            'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:4096',
+            'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:20480',
+            'gallery_urls' => 'nullable|string',
             'meta_title' => 'nullable|string|max:255',
             'meta_keywords' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
@@ -115,22 +116,18 @@ class AdminController extends Controller
             @mkdir($uploadPath, 0755, true);
         }
 
-        // Handle Thumbnail Upload
-        if ($request->hasFile('thumbnail')) {
+        // Handle Thumbnail Upload (prioritizing direct image URL if filled)
+        if ($request->filled('image_url')) {
+            $data['image_url'] = $request->input('image_url');
+        } elseif ($request->hasFile('thumbnail')) {
             try {
                 $file = $request->file('thumbnail');
                 $filename = time() . '_thumb_' . uniqid() . '.' . $file->getClientOriginalExtension();
                 $file->move($uploadPath, $filename);
                 $data['image_url'] = '/uploads/tours/' . $filename;
             } catch (\Exception $e) {
-                if ($request->filled('image_url')) {
-                    $data['image_url'] = $request->input('image_url');
-                } else {
-                    $data['image_url'] = 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80';
-                }
+                return back()->withErrors(['thumbnail' => 'Failed to save uploaded thumbnail image. Please paste a direct image URL instead.'])->withInput();
             }
-        } elseif ($request->filled('image_url')) {
-            $data['image_url'] = $request->input('image_url');
         } else {
             $data['image_url'] = 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80';
         }
@@ -145,12 +142,25 @@ class AdminController extends Controller
                         $file->move($uploadPath, $filename);
                         $galleryPaths[] = '/uploads/tours/' . $filename;
                     } catch (\Exception $e) {
-                        // Suppress write errors
+                        return back()->withErrors(['gallery' => 'Failed to save uploaded gallery images. Please paste direct image URLs instead.'])->withInput();
                     }
                 }
             }
         }
-        $data['gallery_images'] = $galleryPaths;
+
+        // Parse gallery URLs from text area (one per line)
+        $urlGallery = [];
+        if ($request->filled('gallery_urls')) {
+            $urls = explode("\n", $request->input('gallery_urls'));
+            foreach ($urls as $url) {
+                $url = trim($url);
+                if (filter_var($url, FILTER_VALIDATE_URL)) {
+                    $urlGallery[] = $url;
+                }
+            }
+        }
+
+        $data['gallery_images'] = array_merge($galleryPaths, $urlGallery);
 
         // Handle SEO Meta Data
         $data['meta_data'] = [
@@ -176,9 +186,10 @@ class AdminController extends Controller
             'long_desc' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:4096',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:20480',
             'image_url' => 'nullable|string|max:1000',
-            'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:4096',
+            'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:20480',
+            'gallery_urls' => 'nullable|string',
             'meta_title' => 'nullable|string|max:255',
             'meta_keywords' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
@@ -191,26 +202,24 @@ class AdminController extends Controller
             @mkdir($uploadPath, 0755, true);
         }
 
-        // Handle Thumbnail Upload
-        if ($request->hasFile('thumbnail')) {
+        // Handle Thumbnail Upload (prioritizing direct image URL if filled and changed)
+        if ($request->filled('image_url')) {
+            $data['image_url'] = $request->input('image_url');
+        } elseif ($request->hasFile('thumbnail')) {
             try {
                 $file = $request->file('thumbnail');
                 $filename = time() . '_thumb_' . uniqid() . '.' . $file->getClientOriginalExtension();
                 $file->move($uploadPath, $filename);
                 $data['image_url'] = '/uploads/tours/' . $filename;
             } catch (\Exception $e) {
-                if ($request->filled('image_url')) {
-                    $data['image_url'] = $request->input('image_url');
-                }
+                return back()->withErrors(['thumbnail' => 'Failed to save uploaded thumbnail image. Please paste a direct image URL instead.'])->withInput();
             }
-        } elseif ($request->filled('image_url')) {
-            $data['image_url'] = $request->input('image_url');
         }
 
         // Handle Gallery Uploads
         $existingGallery = is_array($tour->gallery_images) ? $tour->gallery_images : [];
+        $newGalleryPaths = [];
         if ($request->hasFile('gallery')) {
-            $newGalleryPaths = [];
             foreach ($request->file('gallery') as $file) {
                 if ($file->isValid()) {
                     try {
@@ -218,18 +227,28 @@ class AdminController extends Controller
                         $file->move($uploadPath, $filename);
                         $newGalleryPaths[] = '/uploads/tours/' . $filename;
                     } catch (\Exception $e) {
-                        // Suppress write errors
+                        return back()->withErrors(['gallery' => 'Failed to save uploaded gallery images. Please paste direct image URLs instead.'])->withInput();
                     }
                 }
             }
-            $data['gallery_images'] = array_merge($existingGallery, $newGalleryPaths);
-        } else {
-            // Check if user requested clearing or keeping
-            if ($request->has('clear_gallery') && $request->input('clear_gallery') == '1') {
-                $data['gallery_images'] = [];
-            } else {
-                $data['gallery_images'] = $existingGallery;
+        }
+
+        // Parse gallery URLs from text area (one per line)
+        $urlGallery = [];
+        if ($request->filled('gallery_urls')) {
+            $urls = explode("\n", $request->input('gallery_urls'));
+            foreach ($urls as $url) {
+                $url = trim($url);
+                if (filter_var($url, FILTER_VALIDATE_URL)) {
+                    $urlGallery[] = $url;
+                }
             }
+        }
+
+        if ($request->has('clear_gallery') && $request->input('clear_gallery') == '1') {
+            $data['gallery_images'] = $urlGallery;
+        } else {
+            $data['gallery_images'] = array_merge($existingGallery, $newGalleryPaths, $urlGallery);
         }
 
         // Handle SEO Meta Data

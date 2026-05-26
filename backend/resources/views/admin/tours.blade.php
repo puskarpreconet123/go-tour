@@ -12,6 +12,17 @@
     </button>
 </div>
 
+@if ($errors->any())
+<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3.5 rounded-xl mb-6 shadow-sm">
+    <div class="font-bold mb-1">Whoops! Something went wrong:</div>
+    <ul class="list-disc pl-5 text-sm space-y-0.5">
+        @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
 <!-- Tour Packages Grid/Table Card -->
 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
     <div class="overflow-x-auto">
@@ -202,9 +213,15 @@
                             <label for="clear-gallery-checkbox" class="text-xs text-red-600 font-semibold cursor-pointer">Clear existing gallery</label>
                         </div>
                     </div>
-                    <div class="space-y-2">
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Upload Multiple Images</label>
-                        <input type="file" id="form-gallery" name="gallery[]" accept="image/*" multiple onchange="previewMultipleFiles(this, 'gallery-previews-container')" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100 cursor-pointer">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Upload Multiple Images</label>
+                            <input type="file" id="form-gallery" name="gallery[]" accept="image/*" multiple onchange="previewMultipleFiles(this, 'gallery-previews-container')" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100 cursor-pointer">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Or Gallery Image URLs (one per line)</label>
+                            <textarea id="form-gallery-urls" name="gallery_urls" rows="2" placeholder="https://example.com/photo1.jpg&#10;https://example.com/photo2.jpg" class="w-full border border-slate-200 rounded-xl px-4 py-2 text-sm focus:border-red-500 focus:outline-none resize-none"></textarea>
+                        </div>
                     </div>
                     <div id="gallery-previews-container" class="flex flex-wrap gap-3">
                         <!-- Preview thumbnails injected here -->
@@ -322,6 +339,7 @@
         document.getElementById('tour-id').value = '';
         document.getElementById('thumb-preview').src = defaultThumbUrl;
         document.getElementById('gallery-previews-container').innerHTML = '';
+        document.getElementById('form-gallery-urls').value = '';
         document.getElementById('clear-gallery-checkbox').checked = false;
 
         tourDrawer.classList.remove('hidden');
@@ -346,6 +364,17 @@
         document.getElementById('form-image-url').value = tour.image_url.startsWith('/uploads/') ? '' : tour.image_url;
         document.getElementById('thumb-preview').src = tour.image_url;
         document.getElementById('clear-gallery-checkbox').checked = false;
+
+        // Populate Gallery URLs
+        let urlGalleryImages = [];
+        if (Array.isArray(tour.gallery_images)) {
+            tour.gallery_images.forEach(img => {
+                if (!img.startsWith('/uploads/')) {
+                    urlGalleryImages.push(img);
+                }
+            });
+        }
+        document.getElementById('form-gallery-urls').value = urlGalleryImages.join('\n');
 
         // SEO Meta Data
         const metadata = tour.meta_data || {};
