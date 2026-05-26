@@ -111,8 +111,8 @@ class AdminController extends Controller
 
         // Ensure directory exists
         $uploadPath = public_path('uploads/tours');
-        if (!file_exists($uploadPath)) {
-            mkdir($uploadPath, 0755, true);
+        if (!is_dir($uploadPath)) {
+            @mkdir($uploadPath, 0755, true);
         }
 
         // Handle Thumbnail Upload
@@ -175,8 +175,8 @@ class AdminController extends Controller
         $data = $request->only(['name', 'location', 'price', 'original_price', 'category', 'short_desc', 'long_desc']);
 
         $uploadPath = public_path('uploads/tours');
-        if (!file_exists($uploadPath)) {
-            mkdir($uploadPath, 0755, true);
+        if (!is_dir($uploadPath)) {
+            @mkdir($uploadPath, 0755, true);
         }
 
         // Handle Thumbnail Upload
