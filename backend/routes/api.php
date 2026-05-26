@@ -52,10 +52,18 @@ Route::prefix('v1')->group(function () {
     Route::get('/setup-db', function () {
         try {
             \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+            $linkOutput = '';
+            try {
+                \Illuminate\Support\Facades\Artisan::call('storage:link');
+                $linkOutput = \Illuminate\Support\Facades\Artisan::output();
+            } catch (\Exception $linkEx) {
+                $linkOutput = 'Symlink failed or already exists: ' . $linkEx->getMessage();
+            }
             return response()->json([
                 'status' => 'success',
-                'message' => 'Database migrations ran successfully!',
-                'output' => \Illuminate\Support\Facades\Artisan::output()
+                'message' => 'Database migrations ran successfully and storage symlink checked!',
+                'output' => \Illuminate\Support\Facades\Artisan::output(),
+                'storage_link' => $linkOutput
             ]);
         } catch (\Exception $e) {
             return response()->json([
