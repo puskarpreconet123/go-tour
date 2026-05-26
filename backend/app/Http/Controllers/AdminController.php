@@ -134,11 +134,10 @@ class AdminController extends Controller
         } elseif ($request->hasFile('thumbnail')) {
             try {
                 $file = $request->file('thumbnail');
-                $filename = time() . '_thumb_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                $file->move($uploadPath, $filename);
-                $data['image_url'] = '/uploads/tours/' . $filename;
+                $path = $file->store('uploads/tours', 'public');
+                $data['image_url'] = '/storage/' . $path;
             } catch (\Exception $e) {
-                return back()->withErrors(['thumbnail' => 'Failed to save uploaded thumbnail image. Please paste a direct image URL instead.'])->withInput();
+                return back()->withErrors(['thumbnail' => 'Failed to save uploaded thumbnail image (Storage write error). Please paste a direct image URL instead.'])->withInput();
             }
         } else {
             $data['image_url'] = 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80';
@@ -150,11 +149,10 @@ class AdminController extends Controller
             foreach ($request->file('gallery') as $file) {
                 if ($file->isValid()) {
                     try {
-                        $filename = time() . '_gal_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                        $file->move($uploadPath, $filename);
-                        $galleryPaths[] = '/uploads/tours/' . $filename;
+                        $path = $file->store('uploads/tours', 'public');
+                        $galleryPaths[] = '/storage/' . $path;
                     } catch (\Exception $e) {
-                        return back()->withErrors(['gallery' => 'Failed to save uploaded gallery images. Please paste direct image URLs instead.'])->withInput();
+                        return back()->withErrors(['gallery' => 'Failed to save uploaded gallery images (Storage write error). Please paste direct image URLs instead.'])->withInput();
                     }
                 }
             }
@@ -195,8 +193,8 @@ class AdminController extends Controller
             return back()->withErrors(['thumbnail' => 'The uploaded thumbnail file exceeds the server\'s upload size limit. Please choose a smaller image (under 2MB) or paste a direct image URL instead.'])->withInput();
         }
         if (isset($_FILES['gallery']['error'])) {
-            foreach ($_FILES['gallery']['error'] as $err) {
-                if ($err === UPLOAD_ERR_INI_SIZE) {
+            foreach ($request->gallery as $key => $file) {
+                if ($_FILES['gallery']['error'][$key] === UPLOAD_ERR_INI_SIZE) {
                     return back()->withErrors(['gallery' => 'One or more gallery files exceed the server\'s upload size limit. Please choose smaller images (under 2MB) or paste direct image URLs instead.'])->withInput();
                 }
             }
@@ -221,22 +219,16 @@ class AdminController extends Controller
 
         $data = $request->only(['name', 'location', 'price', 'original_price', 'category', 'short_desc', 'long_desc']);
 
-        $uploadPath = public_path('uploads/tours');
-        if (!is_dir($uploadPath)) {
-            @mkdir($uploadPath, 0755, true);
-        }
-
         // Handle Thumbnail Upload (prioritizing direct image URL if filled and changed)
         if ($request->filled('image_url')) {
             $data['image_url'] = $request->input('image_url');
         } elseif ($request->hasFile('thumbnail')) {
             try {
                 $file = $request->file('thumbnail');
-                $filename = time() . '_thumb_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                $file->move($uploadPath, $filename);
-                $data['image_url'] = '/uploads/tours/' . $filename;
+                $path = $file->store('uploads/tours', 'public');
+                $data['image_url'] = '/storage/' . $path;
             } catch (\Exception $e) {
-                return back()->withErrors(['thumbnail' => 'Failed to save uploaded thumbnail image. Please paste a direct image URL instead.'])->withInput();
+                return back()->withErrors(['thumbnail' => 'Failed to save uploaded thumbnail image (Storage write error). Please paste a direct image URL instead.'])->withInput();
             }
         }
 
@@ -247,11 +239,10 @@ class AdminController extends Controller
             foreach ($request->file('gallery') as $file) {
                 if ($file->isValid()) {
                     try {
-                        $filename = time() . '_gal_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                        $file->move($uploadPath, $filename);
-                        $newGalleryPaths[] = '/uploads/tours/' . $filename;
+                        $path = $file->store('uploads/tours', 'public');
+                        $newGalleryPaths[] = '/storage/' . $path;
                     } catch (\Exception $e) {
-                        return back()->withErrors(['gallery' => 'Failed to save uploaded gallery images. Please paste direct image URLs instead.'])->withInput();
+                        return back()->withErrors(['gallery' => 'Failed to save uploaded gallery images (Storage write error). Please paste direct image URLs instead.'])->withInput();
                     }
                 }
             }
