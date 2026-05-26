@@ -23,15 +23,20 @@
                 <td class="p-4 text-sm text-gray-800">{{ $req->user->name ?? 'Unknown' }}</td>
                 <td class="p-4 text-sm text-gray-800 capitalize">{{ $req->type }}</td>
                 <td class="p-4 text-sm">
-                    <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-medium">{{ $req->status }}</span>
+                    <span class="px-2.5 py-1 text-xs font-bold rounded-xl border uppercase tracking-wider
+                        @if($req->status == 'approved' || $req->status == 'completed') bg-emerald-50 text-emerald-800 border-emerald-100
+                        @elseif($req->status == 'rejected') bg-rose-50 text-rose-800 border-rose-100
+                        @else bg-amber-50 text-amber-800 border-amber-100 @endif">
+                        {{ $req->status }}
+                    </span>
                 </td>
                 <td class="p-4 text-sm text-gray-500 max-w-xs truncate">{{ $req->notes ?? '-' }}</td>
                 <td class="p-4 text-sm text-gray-500">{{ $req->created_at->format('M d, Y') }}</td>
-                <td class="p-4 text-sm font-medium flex items-center">
-                    <button onclick="showDetailsModal('Request Details', { 'Request ID': '#{{ $req->id }}', 'User': '{{ addslashes($req->user->name ?? 'Unknown') }}', 'Type': '{{ addslashes($req->type) }}', 'Status': '{{ addslashes($req->status) }}', 'Notes': '{{ addslashes($req->notes ?? '-') }}', 'Date': '{{ $req->created_at->format('M d, Y') }}' })" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1 rounded-md transition-colors">Details</button>
-                    <form action="/admin/requests/{{ $req->id }}/status" method="POST" class="inline-block ml-2">
+                <td class="p-4 text-sm font-medium flex items-center gap-2">
+                    <button onclick="showDetailsModal('Request Details', { 'Request ID': '#{{ $req->id }}', 'User': '{{ addslashes($req->user->name ?? 'Unknown') }}', 'Type': '{{ addslashes($req->type) }}', 'Status': '{{ addslashes($req->status) }}', 'Notes': '{{ addslashes($req->notes ?? '-') }}', 'Date': '{{ $req->created_at->format('M d, Y') }}' })" class="text-amber-800 hover:text-amber-900 bg-amber-50 hover:bg-amber-100/80 border border-amber-200/40 px-3.5 py-1.5 rounded-xl transition-all duration-200 text-xs font-bold shadow-sm">Details</button>
+                    <form action="/admin/requests/{{ $req->id }}/status" method="POST" class="inline-block">
                         @csrf
-                        <select name="status" onchange="this.form.submit()" class="text-xs border border-gray-200 rounded p-1 bg-white text-gray-700 outline-none focus:border-red-500 hover:bg-gray-50 cursor-pointer">
+                        <select name="status" onchange="this.form.submit()" class="text-xs border border-amber-200/50 rounded-xl px-2.5 py-1.5 bg-amber-50/50 text-amber-800 outline-none focus:border-amber-450 hover:bg-amber-100/50 cursor-pointer font-bold transition-all duration-200">
                             <option value="pending" {{ $req->status == 'pending' ? 'selected' : '' }}>Pending</option>
                             <option value="approved" {{ $req->status == 'approved' ? 'selected' : '' }}>Approved</option>
                             <option value="rejected" {{ $req->status == 'rejected' ? 'selected' : '' }}>Rejected</option>

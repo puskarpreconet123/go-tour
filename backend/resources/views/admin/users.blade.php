@@ -29,11 +29,11 @@
                             </td>
                             <td class="px-6 py-4">
                                 @if($user->role === 'admin')
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                                    <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-bold rounded-xl border bg-purple-50 text-purple-800 border-purple-100 uppercase tracking-wider">
                                         Admin
                                     </span>
                                 @else
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                    <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-bold rounded-xl border bg-sky-50 text-sky-800 border-sky-100 uppercase tracking-wider">
                                         User
                                     </span>
                                 @endif
@@ -42,7 +42,7 @@
                                 {{ $user->created_at->format('M d, Y H:i') }}
                             </td>
                             <td class="px-6 py-4 text-sm font-medium">
-                                <button onclick="showDetailsModal('User Details', { 'Name': '{{ addslashes($user->name) }}', 'Email': '{{ addslashes($user->email) }}', 'Role': '{{ addslashes($user->role) }}', 'Joined Date': '{{ $user->created_at->format('M d, Y H:i') }}' })" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1 rounded-md transition-colors">Details</button>
+                                <button onclick="showDetailsModal('User Details', { 'Name': '{{ addslashes($user->name) }}', 'Email': '{{ addslashes($user->email) }}', 'Role': '{{ addslashes($user->role) }}', 'Joined Date': '{{ $user->created_at->format('M d, Y H:i') }}' })" class="text-amber-800 hover:text-amber-900 bg-amber-50 hover:bg-amber-100/80 border border-amber-200/40 px-3.5 py-1.5 rounded-xl transition-all duration-200 text-xs font-bold shadow-sm">Details</button>
                             </td>
                         </tr>
                     @empty

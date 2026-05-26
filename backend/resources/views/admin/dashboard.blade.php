@@ -53,11 +53,16 @@
                 <td class="p-4 text-sm text-gray-800">{{ $booking->user->name ?? 'Unknown' }}</td>
                 <td class="p-4 text-sm text-gray-800 capitalize">{{ $booking->type }}</td>
                 <td class="p-4 text-sm">
-                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-medium">{{ $booking->status }}</span>
+                    <span class="px-2.5 py-1 text-xs font-bold rounded-xl border uppercase tracking-wider
+                        @if($booking->status == 'upcoming' || $booking->status == 'approved' || $booking->status == 'completed') bg-emerald-50 text-emerald-800 border-emerald-100
+                        @elseif($booking->status == 'cancelled' || $booking->status == 'rejected') bg-rose-50 text-rose-800 border-rose-100
+                        @else bg-amber-50 text-amber-800 border-amber-100 @endif">
+                        {{ $booking->status }}
+                    </span>
                 </td>
                 <td class="p-4 text-sm text-gray-800">₹{{ number_format($booking->total_amount, 2) }}</td>
                 <td class="p-4 text-sm font-medium">
-                    <button onclick="showDetailsModal('Booking Details', { 'Booking ID': '#{{ $booking->id }}', 'User': '{{ addslashes($booking->user->name ?? 'Unknown') }}', 'Type': '{{ addslashes($booking->type) }}', 'Status': '{{ addslashes($booking->status) }}', 'Amount': '₹{{ number_format($booking->total_amount, 2) }}' })" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1 rounded-md transition-colors">Details</button>
+                    <button onclick="showDetailsModal('Booking Details', { 'Booking ID': '#{{ $booking->id }}', 'User': '{{ addslashes($booking->user->name ?? 'Unknown') }}', 'Type': '{{ addslashes($booking->type) }}', 'Status': '{{ addslashes($booking->status) }}', 'Amount': '₹{{ number_format($booking->total_amount, 2) }}' })" class="text-amber-800 hover:text-amber-900 bg-amber-50 hover:bg-amber-100/80 border border-amber-200/40 px-3.5 py-1.5 rounded-xl transition-all duration-200 text-xs font-bold shadow-sm">Details</button>
                 </td>
             </tr>
             @endforeach

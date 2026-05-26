@@ -52,11 +52,11 @@
                         </div>
                     </td>
                     <td class="p-4">
-                        <span class="px-2.5 py-1 text-xs font-semibold rounded-full uppercase tracking-wider 
-                            @if($tour->category == 'international') bg-teal-50 text-teal-700 border border-teal-100
-                            @elseif($tour->category == 'national') bg-sky-50 text-sky-700 border border-sky-100
-                            @elseif($tour->category == 'educational') bg-purple-50 text-purple-700 border border-purple-100
-                            @else bg-rose-50 text-rose-700 border border-rose-100 @endif">
+                        <span class="px-2.5 py-1 text-xs font-bold rounded-xl border uppercase tracking-wider 
+                            @if($tour->category == 'international') bg-teal-50 text-teal-700 border-teal-100
+                            @elseif($tour->category == 'national') bg-sky-50 text-sky-700 border-sky-100
+                            @elseif($tour->category == 'educational') bg-purple-50 text-purple-700 border-purple-100
+                            @else bg-rose-50 text-rose-700 border-rose-100 @endif">
                             {{ $tour->category ?? 'place' }}
                         </span>
                     </td>
@@ -88,13 +88,13 @@
                     </td>
                     <td class="p-4 pr-6 text-right">
                         <div class="inline-flex items-center gap-2">
-                            <button onclick="showTourDetails({{ json_encode($tour) }})" class="text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 p-2 rounded-xl transition-colors" title="View Details">
+                            <button onclick="showTourDetails({{ json_encode($tour) }})" class="text-amber-850 hover:text-amber-900 bg-amber-50 hover:bg-amber-100/80 border border-amber-200/40 p-2 rounded-xl transition-all duration-200 shadow-sm" title="View Details">
                                 <span class="material-symbols-outlined text-lg block">visibility</span>
                             </button>
-                            <button onclick="editTour({{ json_encode($tour) }})" class="text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 p-2 rounded-xl transition-colors" title="Edit Tour">
+                            <button onclick="editTour({{ json_encode($tour) }})" class="text-sky-850 hover:text-sky-900 bg-sky-50 hover:bg-sky-100/80 border border-sky-200/40 p-2 rounded-xl transition-all duration-200 shadow-sm" title="Edit Tour">
                                 <span class="material-symbols-outlined text-lg block">edit</span>
                             </button>
-                            <button onclick="confirmDeleteTour({{ $tour->id }}, '{{ addslashes($tour->name) }}')" class="text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 p-2 rounded-xl transition-colors" title="Delete Tour">
+                            <button onclick="confirmDeleteTour({{ $tour->id }}, '{{ addslashes($tour->name) }}')" class="text-rose-850 hover:text-rose-900 bg-rose-50 hover:bg-rose-100/80 border border-rose-200/40 p-2 rounded-xl transition-all duration-200 shadow-sm" title="Delete Tour">
                                 <span class="material-symbols-outlined text-lg block">delete</span>
                             </button>
                         </div>
