@@ -37,13 +37,13 @@
 <div class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100">
     <table class="w-full text-left border-collapse">
         <thead>
-            <tr class="bg-gray-50 border-b border-gray-100">
-                <th class="p-4 text-sm font-semibold text-gray-600">ID</th>
-                <th class="p-4 text-sm font-semibold text-gray-600">User</th>
-                <th class="p-4 text-sm font-semibold text-gray-600">Type</th>
-                <th class="p-4 text-sm font-semibold text-gray-600">Status</th>
-                <th class="p-4 text-sm font-semibold text-gray-600">Amount</th>
-                <th class="p-4 text-sm font-semibold text-gray-600">Action</th>
+            <tr class="bg-slate-900 border-b border-slate-800">
+                <th class="p-4 text-sm font-semibold text-slate-200">ID</th>
+                <th class="p-4 text-sm font-semibold text-slate-200">User</th>
+                <th class="p-4 text-sm font-semibold text-slate-200">Type</th>
+                <th class="p-4 text-sm font-semibold text-slate-200">Status</th>
+                <th class="p-4 text-sm font-semibold text-slate-200">Amount</th>
+                <th class="p-4 text-sm font-semibold text-slate-200">Action</th>
             </tr>
         </thead>
         <tbody>

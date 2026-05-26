@@ -28,13 +28,13 @@
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse whitespace-nowrap min-w-max">
             <thead>
-                <tr class="bg-slate-50/75 border-b border-slate-100">
-                    <th class="p-4 text-xs font-bold text-slate-400 uppercase tracking-wider pl-6">Tour Package</th>
-                    <th class="p-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Category</th>
-                    <th class="p-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Location</th>
-                    <th class="p-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Pricing (₹)</th>
-                    <th class="p-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Gallery</th>
-                    <th class="p-4 text-xs font-bold text-slate-400 uppercase tracking-wider pr-6 text-right">Actions</th>
+                <tr class="bg-slate-900 border-b border-slate-800">
+                    <th class="p-4 text-xs font-bold text-slate-200 uppercase tracking-wider pl-6">Tour Package</th>
+                    <th class="p-4 text-xs font-bold text-slate-200 uppercase tracking-wider">Category</th>
+                    <th class="p-4 text-xs font-bold text-slate-200 uppercase tracking-wider">Location</th>
+                    <th class="p-4 text-xs font-bold text-slate-200 uppercase tracking-wider">Pricing (₹)</th>
+                    <th class="p-4 text-xs font-bold text-slate-200 uppercase tracking-wider">Gallery</th>
+                    <th class="p-4 text-xs font-bold text-slate-200 uppercase tracking-wider pr-6 text-right">Actions</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
