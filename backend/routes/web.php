@@ -23,3 +23,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/win-trip', [\App\Http\Controllers\AdminController::class, 'winTrip']);
 });
 
+// Fallback image serving route when symlink fails in cloud environments
+Route::get('/storage/uploads/tours/{filename}', function ($filename) {
+    $path = storage_path('app/public/uploads/tours/' . $filename);
+    if (!file_exists($path)) {
+        abort(404);
+    }
+    $file = file_get_contents($path);
+    $type = mime_content_type($path);
+    return response($file)->header('Content-Type', $type);
+});
+
