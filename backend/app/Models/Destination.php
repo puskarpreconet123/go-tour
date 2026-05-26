@@ -17,6 +17,15 @@ class Destination extends Model
         'image_url',
         'type',
         'category',
+        'short_desc',
+        'long_desc',
+        'gallery_images',
+        'meta_data',
+    ];
+
+    protected $casts = [
+        'gallery_images' => 'array',
+        'meta_data' => 'array',
     ];
 
     public function bookings()

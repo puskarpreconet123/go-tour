@@ -88,6 +88,147 @@ class AdminController extends Controller
         return view('admin.tours', compact('tours'));
     }
 
+    public function storeTour(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'category' => 'required|in:national,international,educational,honeymoon',
+            'location' => 'required|string|max:255',
+            'short_desc' => 'nullable|string',
+            'long_desc' => 'nullable|string',
+            'price' => 'required|numeric|min:0',
+            'original_price' => 'nullable|numeric|min:0',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:4096',
+            'image_url' => 'nullable|string|max:1000',
+            'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:4096',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_keywords' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string',
+        ]);
+
+        $data = $request->only(['name', 'location', 'price', 'original_price', 'category', 'short_desc', 'long_desc']);
+        $data['type'] = 'place';
+
+        // Ensure directory exists
+        $uploadPath = public_path('uploads/tours');
+        if (!file_exists($uploadPath)) {
+            mkdir($uploadPath, 0755, true);
+        }
+
+        // Handle Thumbnail Upload
+        if ($request->hasFile('thumbnail')) {
+            $file = $request->file('thumbnail');
+            $filename = time() . '_thumb_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadPath, $filename);
+            $data['image_url'] = '/uploads/tours/' . $filename;
+        } elseif ($request->filled('image_url')) {
+            $data['image_url'] = $request->input('image_url');
+        } else {
+            $data['image_url'] = 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80';
+        }
+
+        // Handle Gallery Uploads
+        $galleryPaths = [];
+        if ($request->hasFile('gallery')) {
+            foreach ($request->file('gallery') as $file) {
+                if ($file->isValid()) {
+                    $filename = time() . '_gal_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $file->move($uploadPath, $filename);
+                    $galleryPaths[] = '/uploads/tours/' . $filename;
+                }
+            }
+        }
+        $data['gallery_images'] = $galleryPaths;
+
+        // Handle SEO Meta Data
+        $data['meta_data'] = [
+            'meta_title' => $request->input('meta_title'),
+            'meta_description' => $request->input('meta_description'),
+            'meta_keywords' => $request->input('meta_keywords'),
+        ];
+
+        Destination::create($data);
+
+        return redirect('/admin/tours')->with('success', 'Tour Package created successfully!');
+    }
+
+    public function updateTour(Request $request, $id)
+    {
+        $tour = Destination::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'category' => 'required|in:national,international,educational,honeymoon',
+            'location' => 'required|string|max:255',
+            'short_desc' => 'nullable|string',
+            'long_desc' => 'nullable|string',
+            'price' => 'required|numeric|min:0',
+            'original_price' => 'nullable|numeric|min:0',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:4096',
+            'image_url' => 'nullable|string|max:1000',
+            'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:4096',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_keywords' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string',
+        ]);
+
+        $data = $request->only(['name', 'location', 'price', 'original_price', 'category', 'short_desc', 'long_desc']);
+
+        $uploadPath = public_path('uploads/tours');
+        if (!file_exists($uploadPath)) {
+            mkdir($uploadPath, 0755, true);
+        }
+
+        // Handle Thumbnail Upload
+        if ($request->hasFile('thumbnail')) {
+            $file = $request->file('thumbnail');
+            $filename = time() . '_thumb_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadPath, $filename);
+            $data['image_url'] = '/uploads/tours/' . $filename;
+        } elseif ($request->filled('image_url')) {
+            $data['image_url'] = $request->input('image_url');
+        }
+
+        // Handle Gallery Uploads
+        $existingGallery = is_array($tour->gallery_images) ? $tour->gallery_images : [];
+        if ($request->hasFile('gallery')) {
+            $newGalleryPaths = [];
+            foreach ($request->file('gallery') as $file) {
+                if ($file->isValid()) {
+                    $filename = time() . '_gal_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $file->move($uploadPath, $filename);
+                    $newGalleryPaths[] = '/uploads/tours/' . $filename;
+                }
+            }
+            $data['gallery_images'] = array_merge($existingGallery, $newGalleryPaths);
+        } else {
+            // Check if user requested clearing or keeping
+            if ($request->has('clear_gallery') && $request->input('clear_gallery') == '1') {
+                $data['gallery_images'] = [];
+            } else {
+                $data['gallery_images'] = $existingGallery;
+            }
+        }
+
+        // Handle SEO Meta Data
+        $data['meta_data'] = [
+            'meta_title' => $request->input('meta_title'),
+            'meta_description' => $request->input('meta_description'),
+            'meta_keywords' => $request->input('meta_keywords'),
+        ];
+
+        $tour->update($data);
+
+        return redirect('/admin/tours')->with('success', 'Tour Package updated successfully!');
+    }
+
+    public function deleteTour($id)
+    {
+        $tour = Destination::findOrFail($id);
+        $tour->delete();
+        return redirect('/admin/tours')->with('success', 'Tour Package deleted successfully!');
+    }
+
     public function winTrip()
     {
         return view('admin.win-trip');
