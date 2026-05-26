@@ -77,12 +77,17 @@
                 datasets: [{
                     label: 'Revenue (₹)',
                     data: [65000, 59000, 80000, 81000, 56000, 95000, 110000],
-                    borderColor: '#dc2626',
-                    backgroundColor: 'rgba(220, 38, 38, 0.1)',
-                    borderWidth: 2,
+                    borderColor: '#E61E25',
+                    backgroundColor: 'rgba(230, 30, 37, 0.08)',
+                    borderWidth: 2.5,
                     fill: true,
                     tension: 0.4,
-                    pointBackgroundColor: '#dc2626'
+                    pointBackgroundColor: '#E61E25',
+                    pointHoverBackgroundColor: '#00A651',
+                    pointHoverBorderColor: '#fff',
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
                 }]
             },
             options: {
@@ -94,7 +99,7 @@
                 scales: {
                     y: { 
                         beginAtZero: true,
-                        grid: { borderDash: [2, 4], color: '#f3f4f6' }
+                        grid: { borderDash: [2, 4], color: '#f1f5f9' }
                     },
                     x: {
                         grid: { display: false }
@@ -112,25 +117,30 @@
                 datasets: [{
                     data: [45, 25, 20, 10],
                     backgroundColor: [
-                        '#b91c1c', // red-700
-                        '#ef4444', // red-500
-                        '#f87171', // red-400
-                        '#fca5a5'  // red-300
+                        '#E61E25', // Brand Red
+                        '#00A651', // Brand Green
+                        '#1e293b', // Dark Slate
+                        '#94a3b8'  // Medium Slate
                     ],
-                    borderWidth: 0,
+                    borderWidth: 2,
+                    borderColor: '#ffffff',
                     hoverOffset: 4
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                cutout: '70%',
+                cutout: '75%',
                 plugins: {
                     legend: { 
                         position: 'right',
                         labels: {
                             usePointStyle: true,
-                            padding: 20
+                            padding: 20,
+                            font: {
+                                family: "'Plus Jakarta Sans', sans-serif",
+                                size: 12
+                            }
                         }
                     }
                 }
