@@ -117,10 +117,18 @@ class AdminController extends Controller
 
         // Handle Thumbnail Upload
         if ($request->hasFile('thumbnail')) {
-            $file = $request->file('thumbnail');
-            $filename = time() . '_thumb_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move($uploadPath, $filename);
-            $data['image_url'] = '/uploads/tours/' . $filename;
+            try {
+                $file = $request->file('thumbnail');
+                $filename = time() . '_thumb_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move($uploadPath, $filename);
+                $data['image_url'] = '/uploads/tours/' . $filename;
+            } catch (\Exception $e) {
+                if ($request->filled('image_url')) {
+                    $data['image_url'] = $request->input('image_url');
+                } else {
+                    $data['image_url'] = 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80';
+                }
+            }
         } elseif ($request->filled('image_url')) {
             $data['image_url'] = $request->input('image_url');
         } else {
@@ -132,9 +140,13 @@ class AdminController extends Controller
         if ($request->hasFile('gallery')) {
             foreach ($request->file('gallery') as $file) {
                 if ($file->isValid()) {
-                    $filename = time() . '_gal_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                    $file->move($uploadPath, $filename);
-                    $galleryPaths[] = '/uploads/tours/' . $filename;
+                    try {
+                        $filename = time() . '_gal_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                        $file->move($uploadPath, $filename);
+                        $galleryPaths[] = '/uploads/tours/' . $filename;
+                    } catch (\Exception $e) {
+                        // Suppress write errors
+                    }
                 }
             }
         }
@@ -181,10 +193,16 @@ class AdminController extends Controller
 
         // Handle Thumbnail Upload
         if ($request->hasFile('thumbnail')) {
-            $file = $request->file('thumbnail');
-            $filename = time() . '_thumb_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move($uploadPath, $filename);
-            $data['image_url'] = '/uploads/tours/' . $filename;
+            try {
+                $file = $request->file('thumbnail');
+                $filename = time() . '_thumb_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move($uploadPath, $filename);
+                $data['image_url'] = '/uploads/tours/' . $filename;
+            } catch (\Exception $e) {
+                if ($request->filled('image_url')) {
+                    $data['image_url'] = $request->input('image_url');
+                }
+            }
         } elseif ($request->filled('image_url')) {
             $data['image_url'] = $request->input('image_url');
         }
@@ -195,9 +213,13 @@ class AdminController extends Controller
             $newGalleryPaths = [];
             foreach ($request->file('gallery') as $file) {
                 if ($file->isValid()) {
-                    $filename = time() . '_gal_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                    $file->move($uploadPath, $filename);
-                    $newGalleryPaths[] = '/uploads/tours/' . $filename;
+                    try {
+                        $filename = time() . '_gal_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                        $file->move($uploadPath, $filename);
+                        $newGalleryPaths[] = '/uploads/tours/' . $filename;
+                    } catch (\Exception $e) {
+                        // Suppress write errors
+                    }
                 }
             }
             $data['gallery_images'] = array_merge($existingGallery, $newGalleryPaths);
