@@ -135,7 +135,7 @@ class AdminController extends Controller
             try {
                 $file = $request->file('thumbnail');
                 $path = $file->store('uploads/tours', 'public');
-                $data['image_url'] = '/storage/' . $path;
+                $data['image_url'] = '/tours/media?file=' . basename($path);
             } catch (\Exception $e) {
                 return back()->withErrors(['thumbnail' => 'Failed to save uploaded thumbnail image (Storage write error). Please paste a direct image URL instead.'])->withInput();
             }
@@ -150,7 +150,7 @@ class AdminController extends Controller
                 if ($file->isValid()) {
                     try {
                         $path = $file->store('uploads/tours', 'public');
-                        $galleryPaths[] = '/storage/' . $path;
+                        $galleryPaths[] = '/tours/media?file=' . basename($path);
                     } catch (\Exception $e) {
                         return back()->withErrors(['gallery' => 'Failed to save uploaded gallery images (Storage write error). Please paste direct image URLs instead.'])->withInput();
                     }
@@ -226,7 +226,7 @@ class AdminController extends Controller
             try {
                 $file = $request->file('thumbnail');
                 $path = $file->store('uploads/tours', 'public');
-                $data['image_url'] = '/storage/' . $path;
+                $data['image_url'] = '/tours/media?file=' . basename($path);
             } catch (\Exception $e) {
                 return back()->withErrors(['thumbnail' => 'Failed to save uploaded thumbnail image (Storage write error). Please paste a direct image URL instead.'])->withInput();
             }
@@ -240,7 +240,7 @@ class AdminController extends Controller
                 if ($file->isValid()) {
                     try {
                         $path = $file->store('uploads/tours', 'public');
-                        $newGalleryPaths[] = '/storage/' . $path;
+                        $newGalleryPaths[] = '/tours/media?file=' . basename($path);
                     } catch (\Exception $e) {
                         return back()->withErrors(['gallery' => 'Failed to save uploaded gallery images (Storage write error). Please paste direct image URLs instead.'])->withInput();
                     }

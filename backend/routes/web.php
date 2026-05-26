@@ -34,3 +34,15 @@ Route::get('/storage/uploads/tours/{filename}', function ($filename) {
     return response($file)->header('Content-Type', $type);
 });
 
+// Dynamic serving endpoint that bypasses static asset overrides by webservers
+Route::get('/tours/media', function (\Illuminate\Http\Request $request) {
+    $file = $request->query('file');
+    $path = storage_path('app/public/uploads/tours/' . basename($file));
+    if (!file_exists($path)) {
+        abort(404);
+    }
+    $fileContent = file_get_contents($path);
+    $type = mime_content_type($path);
+    return response($fileContent)->header('Content-Type', $type);
+});
+
