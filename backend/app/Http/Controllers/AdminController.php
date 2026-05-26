@@ -192,9 +192,9 @@ class AdminController extends Controller
         if (isset($_FILES['thumbnail']) && $_FILES['thumbnail']['error'] === UPLOAD_ERR_INI_SIZE) {
             return back()->withErrors(['thumbnail' => 'The uploaded thumbnail file exceeds the server\'s upload size limit. Please choose a smaller image (under 2MB) or paste a direct image URL instead.'])->withInput();
         }
-        if (isset($_FILES['gallery']['error'])) {
-            foreach ($request->gallery as $key => $file) {
-                if ($_FILES['gallery']['error'][$key] === UPLOAD_ERR_INI_SIZE) {
+        if (isset($_FILES['gallery']['error']) && is_array($_FILES['gallery']['error'])) {
+            foreach ($_FILES['gallery']['error'] as $err) {
+                if ($err === UPLOAD_ERR_INI_SIZE) {
                     return back()->withErrors(['gallery' => 'One or more gallery files exceed the server\'s upload size limit. Please choose smaller images (under 2MB) or paste direct image URLs instead.'])->withInput();
                 }
             }
