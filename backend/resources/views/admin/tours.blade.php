@@ -1,6 +1,7 @@
 @extends('admin.layout')
 
 @section('content')
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 <div class="flex justify-between items-center mb-6">
     <div>
         <h2 class="text-3xl font-bold text-slate-800">Manage Tours</h2>
@@ -155,6 +156,25 @@
                             <option value="educational">Educational</option>
                             <option value="honeymoon">Honeymoon</option>
                         </select>
+                    </div>
+                </div>
+
+                <!-- Tour Specs (Type, Duration, Pax) -->
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">Package Type *</label>
+                        <select id="form-type" name="type" required class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:border-red-500 focus:outline-none bg-white">
+                            <option value="place">Regular Place</option>
+                            <option value="deal">Limited Time Deal</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">Duration *</label>
+                        <input type="text" id="form-duration" name="duration" required placeholder="e.g. 7D/6N" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:border-red-500 focus:outline-none">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">Pax/Couple Specs *</label>
+                        <input type="text" id="form-pax" name="pax" required placeholder="e.g. Couple Friendly / pax: 10" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:border-red-500 focus:outline-none">
                     </div>
                 </div>
 
@@ -325,6 +345,21 @@
         }, 300);
     }
 
+    // CKEditor Initialization
+    let editorInstance;
+    document.addEventListener("DOMContentLoaded", function() {
+        ClassicEditor
+            .create(document.querySelector('#form-long-desc'), {
+                toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|', 'undo', 'redo' ]
+            })
+            .then(editor => {
+                editorInstance = editor;
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    });
+
     // Drawer Control (Add / Edit Tour)
     const tourDrawer = document.getElementById('tour-drawer');
     const drawerTitle = document.getElementById('drawer-title');
@@ -337,6 +372,12 @@
         drawerTitle.textContent = 'Add Tour Package';
         tourForm.reset();
         document.getElementById('tour-id').value = '';
+        document.getElementById('form-type').value = 'place';
+        document.getElementById('form-duration').value = '';
+        document.getElementById('form-pax').value = '';
+        if (editorInstance) {
+            editorInstance.setData('');
+        }
         document.getElementById('thumb-preview').src = defaultThumbUrl;
         document.getElementById('gallery-previews-container').innerHTML = '';
         document.getElementById('form-gallery-urls').value = '';
@@ -356,11 +397,23 @@
         document.getElementById('tour-id').value = tour.id;
         document.getElementById('form-name').value = tour.name;
         document.getElementById('form-category').value = tour.category || 'national';
+        document.getElementById('form-type').value = tour.type || 'place';
+        
+        const metadata = tour.meta_data || {};
+        document.getElementById('form-duration').value = metadata.duration || '';
+        document.getElementById('form-pax').value = metadata.pax || '';
+        
         document.getElementById('form-location').value = tour.location;
         document.getElementById('form-price').value = tour.price;
         document.getElementById('form-original-price').value = tour.original_price || '';
         document.getElementById('form-short-desc').value = tour.short_desc || '';
-        document.getElementById('form-long-desc').value = tour.long_desc || '';
+        
+        if (editorInstance) {
+            editorInstance.setData(tour.long_desc || '');
+        } else {
+            document.getElementById('form-long-desc').value = tour.long_desc || '';
+        }
+        
         document.getElementById('form-image-url').value = tour.image_url.startsWith('/uploads/') ? '' : tour.image_url;
         document.getElementById('thumb-preview').src = tour.image_url;
         document.getElementById('clear-gallery-checkbox').checked = false;
@@ -377,7 +430,6 @@
         document.getElementById('form-gallery-urls').value = urlGalleryImages.join('\n');
 
         // SEO Meta Data
-        const metadata = tour.meta_data || {};
         document.getElementById('form-meta-title').value = metadata.meta_title || '';
         document.getElementById('form-meta-keywords').value = metadata.meta_keywords || '';
         document.getElementById('form-meta-description').value = metadata.meta_description || '';

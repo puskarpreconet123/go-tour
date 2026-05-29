@@ -114,13 +114,15 @@ class AdminController extends Controller
             'image_url' => 'nullable|string|max:2000',
             'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:20480',
             'gallery_urls' => 'nullable|string',
+            'type' => 'required|in:place,deal',
+            'duration' => 'nullable|string|max:255',
+            'pax' => 'nullable|string|max:255',
             'meta_title' => 'nullable|string|max:255',
             'meta_keywords' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
         ]);
 
-        $data = $request->only(['name', 'location', 'price', 'original_price', 'category', 'short_desc', 'long_desc']);
-        $data['type'] = 'place';
+        $data = $request->only(['name', 'location', 'price', 'original_price', 'category', 'short_desc', 'long_desc', 'type']);
 
         // Ensure directory exists
         $uploadPath = public_path('uploads/tours');
@@ -172,11 +174,13 @@ class AdminController extends Controller
 
         $data['gallery_images'] = array_merge($galleryPaths, $urlGallery);
 
-        // Handle SEO Meta Data
+        // Handle SEO Meta Data and Specs
         $data['meta_data'] = [
             'meta_title' => $request->input('meta_title'),
             'meta_description' => $request->input('meta_description'),
             'meta_keywords' => $request->input('meta_keywords'),
+            'duration' => $request->input('duration'),
+            'pax' => $request->input('pax'),
         ];
 
         Destination::create($data);
@@ -212,12 +216,15 @@ class AdminController extends Controller
             'image_url' => 'nullable|string|max:2000',
             'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:20480',
             'gallery_urls' => 'nullable|string',
+            'type' => 'required|in:place,deal',
+            'duration' => 'nullable|string|max:255',
+            'pax' => 'nullable|string|max:255',
             'meta_title' => 'nullable|string|max:255',
             'meta_keywords' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
         ]);
 
-        $data = $request->only(['name', 'location', 'price', 'original_price', 'category', 'short_desc', 'long_desc']);
+        $data = $request->only(['name', 'location', 'price', 'original_price', 'category', 'short_desc', 'long_desc', 'type']);
 
         // Handle Thumbnail Upload (prioritizing direct image URL if filled and changed)
         if ($request->filled('image_url')) {
@@ -266,11 +273,13 @@ class AdminController extends Controller
             $data['gallery_images'] = array_merge($existingGallery, $newGalleryPaths, $urlGallery);
         }
 
-        // Handle SEO Meta Data
+        // Handle SEO Meta Data and Specs
         $data['meta_data'] = [
             'meta_title' => $request->input('meta_title'),
             'meta_description' => $request->input('meta_description'),
             'meta_keywords' => $request->input('meta_keywords'),
+            'duration' => $request->input('duration'),
+            'pax' => $request->input('pax'),
         ];
 
         $tour->update($data);
