@@ -192,6 +192,40 @@ class DatabaseSeeder extends Seeder
                     'pax' => 'pax: 10',
                 ]
             ],
+            [
+                'name' => 'Switzerland Scenic Alps Getaway',
+                'location' => 'Switzerland',
+                'price' => 119999,
+                'original_price' => null,
+                'image_url' => 'assets/images/swiss.webp',
+                'type' => 'place',
+                'category' => 'international',
+                'short_desc' => 'Experience the breathtaking Swiss Alps, scenic train journeys, pristine lakes, and charming villages.',
+                'long_desc' => '<h3>OVERVIEW :</h3>
+<p>Experience the ultimate Swiss Alpine vacation. Travel through picturesque cities like Zurich and Lucerne, take the world-famous scenic trains, and ride the cable cars to the snow-covered peaks of Mount Titlis.</p>
+<article class="package-include bg-light-grey" style="padding: 20px; background: #f8f9fa; border-radius: 10px; margin: 20px 0;">
+<h3>INCLUDE & EXCLUDE :</h3>
+<ul style="list-style: none; padding-left: 0;">
+<li style="margin-bottom: 8px;"><i class="fas fa-check" style="color: #28a745; margin-right: 10px;"></i>4 Nights Premium Hotel stay</li>
+<li style="margin-bottom: 8px;"><i class="fas fa-check" style="color: #28a745; margin-right: 10px;"></i>Swiss Travel Pass for scenic trains</li>
+<li style="margin-bottom: 8px;"><i class="fas fa-check" style="color: #28a745; margin-right: 10px;"></i>Mt. Titlis cable car tickets</li>
+<li style="margin-bottom: 8px;"><i class="fas fa-check" style="color: #28a745; margin-right: 10px;"></i>Daily Breakfast</li>
+<li style="margin-bottom: 8px;"><i class="fas fa-times" style="color: #dc3545; margin-right: 10px;"></i>International flights</li>
+<li style="margin-bottom: 8px;"><i class="fas fa-times" style="color: #dc3545; margin-right: 10px;"></i>Visa fees</li>
+</ul>
+</article>
+<h3>ITINERARY :</h3>
+<ul style="list-style: none; padding-left: 0;">
+<li style="margin-bottom: 15px; display: flex; align-items: flex-start; gap: 10px;"><i class="fas fa-dot-circle" style="color: #ff5722; margin-top: 5px;"></i><div><strong>DAY 1: Arrive in Zurich</strong><br>Transfer to your hotel in Zurich. Explore the beautiful Lake Zurich and historic Altstadt in the evening.</div></li>
+<li style="margin-bottom: 15px; display: flex; align-items: flex-start; gap: 10px;"><i class="fas fa-dot-circle" style="color: #ff5722; margin-top: 5px;"></i><div><strong>DAY 2: Scenic Train to Lucerne</strong><br>Board the train to Lucerne. Enjoy a walking tour of Chapel Bridge and Lion Monument.</div></li>
+<li style="margin-bottom: 15px; display: flex; align-items: flex-start; gap: 10px;"><i class="fas fa-dot-circle" style="color: #ff5722; margin-top: 5px;"></i><div><strong>DAY 3: Mt. Titlis Adventure</strong><br>Take the revolving Rotair cable car to Mount Titlis summit. Walk the cliff bridge and experience the snow fields.</div></li>
+<li style="margin-bottom: 15px; display: flex; align-items: flex-start; gap: 10px;"><i class="fas fa-dot-circle" style="color: #ff5722; margin-top: 5px;"></i><div><strong>DAY 4: Departure</strong><br>Transfer to Zurich Airport for your flight back home.</div></li>
+</ul>',
+                'meta_data' => [
+                    'duration' => '6D/5N',
+                    'pax' => 'Group Tour',
+                ]
+            ],
         ];
 
         foreach ($packages as $pkg) {
