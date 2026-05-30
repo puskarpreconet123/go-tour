@@ -2,7 +2,34 @@
 const API_BASE_URL = 'https://go-tour-backend.onrender.com/api/v1';
 
 // Utility to get image URL (if it is a local upload path, prepend backend base URL, otherwise return as is)
-function getImageUrl(url) {
+function getImageUrl(url, name = '') {
+    const lowercaseName = String(name).toLowerCase();
+
+    // Check if it is an uploaded image on Render (which is temporary and gets deleted on spin-downs)
+    // If so, fall back to our local high-quality static assets for predefined tours
+    const isRenderUpload = !url || url.startsWith('/uploads/') || url.startsWith('/tours/media');
+
+    if (isRenderUpload) {
+        if (lowercaseName.includes('switzerland') || lowercaseName.includes('swiss')) {
+            return 'assets/images/img16.jpg';
+        }
+        if (lowercaseName.includes('dubai')) {
+            return 'assets/images/img2.jpg';
+        }
+        if (lowercaseName.includes('kashmir')) {
+            return 'assets/images/img10.jpg';
+        }
+        if (lowercaseName.includes('bali')) {
+            return 'assets/images/img1.jpg';
+        }
+        if (lowercaseName.includes('japan')) {
+            return 'assets/images/img3.jpg';
+        }
+        if (lowercaseName.includes('france') || lowercaseName.includes('paris')) {
+            return 'assets/images/img9.jpg';
+        }
+    }
+
     if (!url) return 'assets/images/placeholder.jpg';
     if (url.startsWith('/uploads/') || url.startsWith('/tours/media')) {
         return `https://go-tour-backend.onrender.com${url}`;
@@ -45,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const path = window.location.pathname;
-    
+
     if (path.endsWith('index.html') || path === '/' || path.endsWith('/')) {
         initHomePage();
     } else if (path.endsWith('destination.html')) {
@@ -65,12 +92,12 @@ async function initHomePage() {
             // Keep the "VIEW ALL PACKAGES" button block and replace just the list of articles
             const btnWrap = packageSection.querySelector('.section-btn-wrap');
             packageSection.innerHTML = ''; // Clear static items
-            
+
             places.forEach(place => {
                 const duration = place.meta_data?.duration || 'N/A';
                 const pax = place.meta_data?.pax || 'N/A';
-                const img = getImageUrl(place.image_url);
-                
+                const img = getImageUrl(place.image_url, place.name);
+
                 const article = document.createElement('article');
                 article.className = 'package-item';
                 article.innerHTML = `
@@ -105,9 +132,9 @@ async function initHomePage() {
                           / per person
                        </h6>
                        ${typeof isAuthenticated !== 'undefined' && isAuthenticated()
-                         ? `<a href="booking.html?id=${place.id}" class="outline-btn outline-btn-white">Book now</a>`
-                         : `<a href="login.html?redirect=booking.html?id=${place.id}" class="outline-btn outline-btn-white">Login to Book</a>`
-                       }
+                        ? `<a href="booking.html?id=${place.id}" class="outline-btn outline-btn-white">Book now</a>`
+                        : `<a href="login.html?redirect=booking.html?id=${place.id}" class="outline-btn outline-btn-white">Login to Book</a>`
+                    }
                     </div>
                 `;
                 packageSection.appendChild(article);
@@ -124,12 +151,12 @@ async function initHomePage() {
         const deals = await fetchDestinations({ type: 'deal' });
         if (deals.length > 0) {
             offerSectionRow.innerHTML = ''; // Clear static items
-            
+
             deals.forEach(deal => {
                 const duration = deal.meta_data?.duration || 'N/A';
                 const pax = deal.meta_data?.pax || 'N/A';
-                const img = getImageUrl(deal.image_url);
-                
+                const img = getImageUrl(deal.image_url, deal.name);
+
                 // Calculate percentage discount
                 let discountHtml = '';
                 if (deal.original_price && deal.original_price > deal.price) {
@@ -169,9 +196,9 @@ async function initHomePage() {
                              <ins>₹${parseFloat(deal.price).toLocaleString()}</ins>
                           </div>
                           ${typeof isAuthenticated !== 'undefined' && isAuthenticated()
-                            ? `<a href="booking.html?id=${deal.id}" class="round-btn">Book Now</a>`
-                            : `<a href="login.html?redirect=booking.html?id=${deal.id}" class="round-btn">Login to Book</a>`
-                          }
+                        ? `<a href="booking.html?id=${deal.id}" class="round-btn">Book Now</a>`
+                        : `<a href="login.html?redirect=booking.html?id=${deal.id}" class="round-btn">Login to Book</a>`
+                    }
                        </div>
                     </article>
                 `;
@@ -186,10 +213,10 @@ async function initHomePage() {
         const popularDestinations = await fetchDestinations();
         if (popularDestinations.length > 0) {
             destinationSectionRow.innerHTML = ''; // Clear static items
-            
+
             // Limit to top 3 items
             popularDestinations.slice(0, 3).forEach(dest => {
-                const img = getImageUrl(dest.image_url);
+                const img = getImageUrl(dest.image_url, dest.name);
                 const col = document.createElement('div');
                 col.className = 'col-lg-4 col-md-6';
                 col.innerHTML = `
@@ -220,13 +247,13 @@ async function initDestinationsPage() {
     if (destinationsContainer) {
         // Set id for consistency
         destinationsContainer.id = 'destinations-container';
-        
+
         const allDestinations = await fetchDestinations();
         if (allDestinations.length > 0) {
             destinationsContainer.innerHTML = '';
-            
+
             allDestinations.forEach(dest => {
-                const img = getImageUrl(dest.image_url);
+                const img = getImageUrl(dest.image_url, dest.name);
                 const col = document.createElement('div');
                 col.className = 'col-lg-4 col-md-6';
                 col.innerHTML = `
@@ -286,7 +313,7 @@ async function initPackageDetailPage() {
     if (metaList) {
         const duration = pkg.meta_data?.duration || 'N/A';
         const pax = pkg.meta_data?.pax || 'N/A';
-        
+
         metaList.innerHTML = `
             <li>
                 <i class="fas fa-clock"></i>
@@ -311,7 +338,7 @@ async function initPackageDetailPage() {
     const mainImg = document.querySelector('.single-package-image img');
     const mainImgContainer = document.querySelector('.single-package-image');
     if (mainImg) {
-        mainImg.src = getImageUrl(pkg.image_url);
+        mainImg.src = getImageUrl(pkg.image_url, pkg.name);
         mainImg.style.width = '100%';
         mainImg.style.height = '100%';
         mainImg.style.objectFit = 'cover';
@@ -351,145 +378,203 @@ async function initPackageDetailPage() {
             }
         });
     }
+
+    // Bind related gallery images from admin-uploaded gallery_images
+    const relatedSlide = document.querySelector('.related-package-slide');
+    if (relatedSlide) {
+        const galleryImages = pkg.gallery_images || [];
+        if (galleryImages.length > 0) {
+            // Check if slick was already initialized
+            const $slide = $('.related-package-slide');
+            if ($slide.hasClass('slick-initialized')) {
+                $slide.slick('unslick');
+            }
+            
+            relatedSlide.innerHTML = '';
+            
+            galleryImages.forEach(imgUrl => {
+                const img = getImageUrl(imgUrl);
+                const item = document.createElement('div');
+                item.className = 'related-package-item';
+                item.innerHTML = `<img src="${img}" alt="Gallery Image" style="border-radius: 25px; width: 100%; height: 200px; object-fit: cover;">`;
+                relatedSlide.appendChild(item);
+            });
+            
+            // Re-initialize slick slider
+            $slide.slick({
+                dots: true,
+                infinite: true,
+                speed: 1000,
+                prevArrow: false,
+                nextArrow: false,
+                slidesToShow: Math.min(2, galleryImages.length),
+                autoplay: true
+            });
+        } else {
+            // Hide the related section if no gallery images are available
+            const relatedWrap = document.querySelector('.related-package');
+            if (relatedWrap) {
+                relatedWrap.style.display = 'none';
+            }
+        }
+    }
 }
 
-// Automatically parses plain/CKEditor description text and structures it into theme-styled modules
+// Automatically parses plain/CKEditor description text and structures it into theme-styled modules in original order
 function parseRichDescription(html) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
-    
-    let overviewHtml = '';
-    let includeHtml = '';
-    let itineraryHtml = '';
-    
-    let currentSection = 'overview'; // Default section
-    
+
+    let resultHtml = '';
+    let itineraryIndex = 0;
+
     const elements = Array.from(doc.body.children);
-    
+
     elements.forEach(el => {
-        const text = el.textContent.trim().toUpperCase();
-        if (text.startsWith('OVERVIEW')) {
-            currentSection = 'overview';
-            return;
-        } else if (text.startsWith('INCLUDE') || text.startsWith('EXCLUDE') || text.startsWith('INCLUSION')) {
-            currentSection = 'include';
-            return;
-        } else if (text.startsWith('ITINERARY')) {
-            currentSection = 'itinerary';
-            return;
-        }
-        
-        if (currentSection === 'overview') {
-            overviewHtml += el.outerHTML;
-        } else if (currentSection === 'include') {
-            // Process list items or paragraphs under Include/Exclude
-            if (el.tagName === 'UL' || el.tagName === 'OL') {
-                const items = el.querySelectorAll('li');
+        const tagName = el.tagName.toUpperCase();
+
+        if (tagName === 'UL') {
+            // Unordered list -> Include & Exclude style
+            let includeItemsHtml = '';
+            const items = el.querySelectorAll('li');
+            items.forEach(li => {
+                const liText = li.textContent.trim();
+                if (!liText) return;
+
+                const isExclude = /fee|expense|dirham|private|exclude|not\s+included|visa|tax|flight|own/i.test(liText);
+                const iconClass = isExclude ? 'fas fa-times' : 'fas fa-check';
+                const colorClass = isExclude ? 'text-danger' : 'text-success';
+
+                includeItemsHtml += `
+                    <li style="margin-bottom: 12px; width: 50%; display: flex; align-items: center; gap: 8px;">
+                        <i class="${iconClass} ${colorClass}" style="font-size: 13px; min-width: 15px;"></i>
+                        <span>${liText}</span>
+                    </li>`;
+            });
+
+            resultHtml += `
+                <article class="package-include bg-light-grey" style="padding: 30px 40px; margin: 25px 0; background: #f8f9fa; border-radius: 25px;">
+                    <ul style="display: flex; flex-wrap: wrap; list-style: none; padding-left: 0; margin-bottom: 0; width: 100%;">
+                        ${includeItemsHtml}
+                    </ul>
+                </article>
+            `;
+        } else if (tagName === 'OL') {
+            // Ordered list -> Itinerary style
+            let itineraryItemsHtml = '';
+            const items = el.querySelectorAll('li');
+            items.forEach(li => {
+                itineraryItemsHtml += formatItineraryItem(li.innerHTML, itineraryIndex++);
+            });
+
+            resultHtml += `
+                <article class="package-ininerary" style="margin: 25px 0;">
+                    <ul style="list-style: none; padding-left: 0; margin-bottom: 0;">
+                        ${itineraryItemsHtml}
+                    </ul>
+                </article>
+            `;
+        } else if (['H1', 'H2', 'H3', 'H4', 'H5', 'H6'].includes(tagName)) {
+            // Render headings with Montserrat font and blue color like the main package headers
+            let fontSize = '22px';
+            if (tagName === 'H1') fontSize = '32px';
+            else if (tagName === 'H2') fontSize = '28px';
+            else if (tagName === 'H3') fontSize = '22px';
+            else if (tagName === 'H4') fontSize = '18px';
+            else if (tagName === 'H5') fontSize = '16px';
+
+            resultHtml += `<${tagName} style="font-family: 'Montserrat', sans-serif; font-weight: 700; color: #223645; margin-top: 30px; margin-bottom: 15px; font-size: ${fontSize}; line-height: 1.2; text-transform: uppercase;">${el.innerHTML}</${tagName}>`;
+        } else {
+            // Check for nested lists inside regular paragraphs
+            if (el.querySelector('ul')) {
+                let includeItemsHtml = '';
+                const items = el.querySelectorAll('ul li');
                 items.forEach(li => {
                     const liText = li.textContent.trim();
                     if (!liText) return;
-                    
                     const isExclude = /fee|expense|dirham|private|exclude|not\s+included|visa|tax|flight|own/i.test(liText);
                     const iconClass = isExclude ? 'fas fa-times' : 'fas fa-check';
                     const colorClass = isExclude ? 'text-danger' : 'text-success';
-                    
-                    includeHtml += `
+                    includeItemsHtml += `
                         <li style="margin-bottom: 12px; width: 50%; display: flex; align-items: center; gap: 8px;">
                             <i class="${iconClass} ${colorClass}" style="font-size: 13px; min-width: 15px;"></i>
                             <span>${liText}</span>
                         </li>`;
                 });
-            } else {
-                // If they wrote as paragraphs/lines, split by line break or process directly
-                const lines = el.innerHTML.split(/<br\s*\/?>/i);
-                lines.forEach(line => {
-                    const cleanLine = line.replace(/<[^>]*>/g, '').trim();
-                    if (!cleanLine) return;
-                    
-                    const isExclude = /fee|expense|dirham|private|exclude|not\s+included|visa|tax|flight|own/i.test(cleanLine);
-                    const iconClass = isExclude ? 'fas fa-times' : 'fas fa-check';
-                    const colorClass = isExclude ? 'text-danger' : 'text-success';
-                    
-                    includeHtml += `
-                        <li style="margin-bottom: 12px; width: 50%; display: flex; align-items: center; gap: 8px;">
-                            <i class="${iconClass} ${colorClass}" style="font-size: 13px; min-width: 15px;"></i>
-                            <span>${cleanLine}</span>
-                        </li>`;
-                });
-            }
-        } else if (currentSection === 'itinerary') {
-            if (el.tagName === 'UL' || el.tagName === 'OL') {
-                const items = el.querySelectorAll('li');
+
+                resultHtml += `
+                    <article class="package-include bg-light-grey" style="padding: 30px 40px; margin: 25px 0; background: #f8f9fa; border-radius: 25px;">
+                        <ul style="display: flex; flex-wrap: wrap; list-style: none; padding-left: 0; margin-bottom: 0; width: 100%;">
+                            ${includeItemsHtml}
+                        </ul>
+                    </article>
+                `;
+            } else if (el.querySelector('ol')) {
+                let itineraryItemsHtml = '';
+                const items = el.querySelectorAll('ol li');
                 items.forEach(li => {
-                    itineraryHtml += formatItineraryItem(li.innerHTML);
+                    itineraryItemsHtml += formatItineraryItem(li.innerHTML, itineraryIndex++);
                 });
+
+                resultHtml += `
+                    <article class="package-ininerary" style="margin: 25px 0;">
+                        <ul style="list-style: none; padding-left: 0; margin-bottom: 0;">
+                            ${itineraryItemsHtml}
+                        </ul>
+                    </article>
+                `;
             } else {
-                itineraryHtml += formatItineraryItem(el.innerHTML);
+                // Keep the exact HTML tag & text
+                resultHtml += el.outerHTML;
             }
         }
     });
-    
-    let finalHtml = '';
-    
-    if (overviewHtml) {
-        finalHtml += `
-            <article class="package-overview">
-                <h3>OVERVIEW :</h3>
-                ${overviewHtml}
-            </article>
-        `;
-    }
-    
-    if (includeHtml) {
-        finalHtml += `
-            <article class="package-include bg-light-grey" style="padding: 30px 40px; margin: 40px 0; background: #f8f9fa; border-radius: 25px;">
-                <h3>INCLUDE & EXCLUDE :</h3>
-                <ul style="display: flex; flex-wrap: wrap; list-style: none; padding-left: 0; margin-bottom: 0;">
-                    ${includeHtml}
-                </ul>
-            </article>
-        `;
-    }
-    
-    if (itineraryHtml) {
-        finalHtml += `
-            <article class="package-ininerary">
-                <h3>ITINERARY :</h3>
-                <ul style="list-style: none; padding-left: 0; margin-bottom: 0;">
-                    ${itineraryHtml}
-                </ul>
-            </article>
-        `;
-    }
-    
-    return finalHtml || html;
+
+    return resultHtml || html;
 }
 
-function formatItineraryItem(htmlContent) {
-    const cleanText = htmlContent.replace(/<[^>]*>/g, '').trim();
-    if (!cleanText) return '';
-    
-    // Check if starts with Day X or DAY X
-    const dayMatch = cleanText.match(/^(DAY\s+\d+|Day\s+\d+):/i);
-    if (dayMatch) {
-        const dayTitle = dayMatch[1].toUpperCase();
-        const details = cleanText.substring(dayMatch[0].length).trim();
-        return `
-            <li style="margin-bottom: 18px; display: flex; align-items: flex-start; gap: 12px;">
-                <i aria-hidden="true" class="fas fa-dot-circle" style="color: #3A78C9; margin-top: 6px; font-size: 13px;"></i>
-                <div>
-                    <span style="font-weight: 700; color: #3A78C9; margin-right: 8px;">${dayTitle}</span>
-                    <span style="font-weight: 500;">${details}</span>
-                </div>
-            </li>
-        `;
+function formatItineraryItem(htmlContent, index) {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = htmlContent;
+
+    let headerText = '';
+    let detailsHtml = '';
+
+    // 1. Check for bold/strong elements which usually represent the heading
+    const strongEl = tempDiv.querySelector('strong, b');
+    if (strongEl) {
+        headerText = strongEl.textContent.trim();
+        strongEl.remove();
+        detailsHtml = tempDiv.innerHTML.trim();
     } else {
-        return `
-            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 12px; padding-left: 25px; color: #626672;">
-                <div>${cleanText}</div>
-            </li>
-        `;
+        // 2. Otherwise split by first line break to separate heading from detail description
+        const parts = htmlContent.split(/<br\s*\/?>/i);
+        if (parts.length > 1) {
+            const tempHeader = document.createElement('div');
+            tempHeader.innerHTML = parts[0];
+            headerText = tempHeader.textContent.trim();
+            detailsHtml = parts.slice(1).join('<br>').trim();
+        } else {
+            // 3. Fallback: use whole text as header
+            headerText = tempDiv.textContent.trim();
+            detailsHtml = '';
+        }
     }
+
+    if (!headerText) return '';
+
+    // Clean up any leading/trailing breaks in details
+    detailsHtml = detailsHtml.replace(/^(<br\s*\/?>|\s)+/i, '').replace(/(<br\s*\/?>|\s)+$/i, '').trim();
+
+    return `
+        <li style="margin-bottom: 18px; display: flex; align-items: flex-start; gap: 12px;">
+            <i aria-hidden="true" class="fas fa-dot-circle" style="color: #3A78C9; margin-top: 6px; font-size: 13px;"></i>
+            <div>
+                <span style="font-weight: 700; color: #3A78C9; display: block; margin-bottom: 4px;">${headerText}</span>
+                ${detailsHtml ? `<span style="font-weight: 500; color: #626672; display: block;">${detailsHtml}</span>` : ''}
+            </div>
+        </li>
+    `;
 }
 
 // Update header navigation elements dynamically based on user session status
@@ -549,7 +634,7 @@ function updateNavigationHeader() {
             logoutLi = document.createElement('li');
             logoutLi.innerHTML = '<a href="#" id="auth-logout-btn" style="color: #d9383a; font-weight: bold;">Logout</a>';
             navUl.appendChild(logoutLi);
-            
+
             document.getElementById('auth-logout-btn').addEventListener('click', (e) => {
                 e.preventDefault();
                 logoutUser();

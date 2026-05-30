@@ -7,6 +7,8 @@ use App\Models\CmsContent;
 use App\Models\SupportRequest;
 use App\Models\User;
 use App\Models\Destination;
+use App\Models\LuckyDraw;
+use App\Models\LuckyDrawTicket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -296,8 +298,84 @@ class AdminController extends Controller
 
     public function winTrip()
     {
-        return view('admin.win-trip');
+        $luckyDraws = LuckyDraw::with(['destination', 'winner'])->latest()->get();
+        $destinations = Destination::all(); // Packages list to choose from
+        return view('admin.win-trip', compact('luckyDraws', 'destinations'));
     }
+
+    // 1. Create a Lucky Draw Campaign
+    public function storeLuckyDraw(Request $request)
+    {
+        $request->validate([
+            'destination_id' => 'required|exists:destinations,id',
+            'ticket_price' => 'required|numeric|min:0',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
+        ]);
+
+        LuckyDraw::create([
+            'destination_id' => $request->destination_id,
+            'ticket_price' => $request->ticket_price,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'status' => 'active',
+        ]);
+
+        return redirect()->back()->with('success', 'Lucky Draw created successfully!');
+    }
+
+    // 2. Extend End Date
+    public function extendLuckyDraw(Request $request, $id)
+    {
+        $request->validate([
+            'end_date' => 'required|date',
+        ]);
+
+        $draw = LuckyDraw::findOrFail($id);
+
+        if ($request->end_date <= $draw->start_date) {
+            return redirect()->back()->with('error', 'End date must be after the start date.');
+        }
+
+        $draw->update([
+            'end_date' => $request->end_date
+        ]);
+
+        return redirect()->back()->with('success', 'End date extended successfully!');
+    }
+
+    // 3. Draw Winner Randomly
+    public function drawLuckyDrawWinner($id)
+    {
+        $draw = LuckyDraw::findOrFail($id);
+
+        // Get all tickets bought for this draw
+        $tickets = $draw->tickets;
+
+        if ($tickets->isEmpty()) {
+            return redirect()->back()->with('error', 'Cannot draw winner: No tickets bought for this Lucky Draw.');
+        }
+
+        // Pick a random ticket and get the user
+        $winningTicket = $tickets->random();
+
+        $draw->update([
+            'status' => 'finished',
+            'winner_id' => $winningTicket->user_id,
+        ]);
+
+        return redirect()->back()->with('success', 'Winner drawn successfully! The winner is ' . $draw->winner->name);
+    }
+
+    // 4. Remove Lucky Draw
+    public function destroyLuckyDraw($id)
+    {
+        $draw = LuckyDraw::findOrFail($id);
+        $draw->delete();
+
+        return redirect()->back()->with('success', 'Lucky Draw campaign removed successfully!');
+    }
+
 
     public function cms()
     {

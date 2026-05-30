@@ -21,6 +21,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/cms', [\App\Http\Controllers\AdminController::class, 'cms']);
     Route::post('/admin/cms/update', [\App\Http\Controllers\AdminController::class, 'updateCms'])->name('admin.cms.update');
     Route::get('/admin/win-trip', [\App\Http\Controllers\AdminController::class, 'winTrip']);
+    Route::post('/admin/win-trip', [\App\Http\Controllers\AdminController::class, 'storeLuckyDraw']);
+    Route::post('/admin/win-trip/{id}/extend', [\App\Http\Controllers\AdminController::class, 'extendLuckyDraw']);
+    Route::post('/admin/win-trip/{id}/draw', [\App\Http\Controllers\AdminController::class, 'drawLuckyDrawWinner']);
+    Route::delete('/admin/win-trip/{id}', [\App\Http\Controllers\AdminController::class, 'destroyLuckyDraw']);
 });
 
 // Fallback image serving route when symlink fails in cloud environments

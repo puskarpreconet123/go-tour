@@ -263,5 +263,45 @@ class DatabaseSeeder extends Seeder
                 'booking_details' => ['passengers' => 1],
             ]);
         }
+
+        // Seed some Lucky Draws and Tickets
+        $destinationsList = Destination::all();
+        if ($destinationsList->isNotEmpty()) {
+            // 1. Create an active lucky draw
+            $draw1 = \App\Models\LuckyDraw::firstOrCreate(
+                ['destination_id' => $destinationsList->first()->id, 'status' => 'active'],
+                [
+                    'ticket_price' => 250.00,
+                    'start_date' => now()->subDays(2),
+                    'end_date' => now()->addDays(5),
+                ]
+            );
+
+            // Buy tickets for all users
+            foreach ($users as $user) {
+                \App\Models\LuckyDrawTicket::create([
+                    'lucky_draw_id' => $draw1->id,
+                    'user_id' => $user->id,
+                ]);
+            }
+
+            // 2. Create a finished lucky draw
+            if ($destinationsList->count() > 1) {
+                $draw2 = \App\Models\LuckyDraw::firstOrCreate(
+                    ['destination_id' => $destinationsList->get(1)->id, 'status' => 'finished'],
+                    [
+                        'ticket_price' => 500.00,
+                        'start_date' => now()->subDays(10),
+                        'end_date' => now()->subDays(3),
+                        'winner_id' => $users->first()->id,
+                    ]
+                );
+
+                \App\Models\LuckyDrawTicket::create([
+                    'lucky_draw_id' => $draw2->id,
+                    'user_id' => $users->first()->id,
+                ]);
+            }
+        }
     }
 }

@@ -22,6 +22,10 @@ Route::prefix('v1')->group(function () {
     Route::get('/destinations', [\App\Http\Controllers\Api\V1\DestinationController::class, 'index']);
     Route::get('/destinations/{id}', [\App\Http\Controllers\Api\V1\DestinationController::class, 'show']);
 
+    // Lucky Draws
+    Route::get('/lucky-draws', [\App\Http\Controllers\Api\V1\LuckyDrawController::class, 'index']);
+    Route::get('/lucky-draws/{id}', [\App\Http\Controllers\Api\V1\LuckyDrawController::class, 'show']);
+
     // CMS public endpoint
     Route::get('/cms/{section}', function ($section) {
         $allowed = ['about', 'privacy', 'terms'];
@@ -46,6 +50,9 @@ Route::prefix('v1')->group(function () {
         // Support & Visa/Passport Requests
         Route::get('/requests', [\App\Http\Controllers\Api\V1\RequestController::class, 'index']);
         Route::post('/requests', [\App\Http\Controllers\Api\V1\RequestController::class, 'store']);
+
+        // Lucky Draw Tickets
+        Route::post('/lucky-draws/{id}/tickets', [\App\Http\Controllers\Api\V1\LuckyDrawController::class, 'buyTicket']);
     });
 
     // Setup DB without session middleware crashing it!
