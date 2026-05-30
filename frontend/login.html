@@ -139,6 +139,20 @@
             gap: 8px;
          }
       </style>
+      <script>
+         (function() {
+            const token = localStorage.getItem('api_token');
+            if (token) {
+               document.documentElement.classList.add('user-logged-in');
+            } else {
+               document.documentElement.classList.add('user-guest');
+            }
+            const path = window.location.pathname;
+            if (path.endsWith('login') || path.endsWith('login.html') || path.endsWith('register') || path.endsWith('register.html')) {
+               document.documentElement.classList.add('hide-nav-completely');
+            }
+         })();
+      </script>
    </head>
    <body class="home">
       <div id="page" class="page">
@@ -150,7 +164,7 @@
                     
                      <div class="site-logo text-center">
                         <h1 class="site-title">
-                           <a href="index.html">
+                           <a href="index">
                               <img src="assets/images/site-logo.png" alt="Logo" class="default-logo">
                               <img src="assets/images/site-logo2.png" alt="Logo" class="fixed-logo">
                            </a>
@@ -160,25 +174,29 @@
                         <nav id="navigation" class="navigation">
                            <ul>
                               <li>
-                                 <a href="index.html">Home</a>
+                                 <a href="index">Home</a>
                               </li>
                               <li>
-                                 <a href="about.html">about us</a>
+                                 <a href="about">about us</a>
                               </li>
                               <li>
-                                 <a href="destination.html">My Trips</a>
+                                 <a href="destination">My Trips</a>
+                              </li>
+                              <li class="nav-lucky-draw">
+                                 <a href="lucky-draw" style="color:#f7b731;font-weight:700;">🏆 Lucky Draw</a>
                               </li>
                               <li>
-                                 <a href="gallery.html">Gallery</a>
+                                 <a href="gallery">Gallery</a>
                               </li>
                               <li>
-                                 <a href="contact.html">contact us</a>
+                                 <a href="contact">contact us</a>
                               </li>
                            </ul>
                         </nav>
                      </div>
                      <div class="header-btn">
-                        <a href="login.html" class="round-btn">Login</a>
+                        <a href="login" class="round-btn nav-btn-login">Login</a>
+                        <a href="#" class="round-btn nav-btn-logout" style="background: linear-gradient(135deg, rgb(217, 56, 58), rgb(183, 28, 28)) !important; color: rgb(255, 255, 255) !important; display: none;">Logout</a>
                      </div>
                   </div>
                </div>
@@ -210,7 +228,7 @@
                      </form>
                      
                      <div class="auth-footer">
-                        Don't have an account? <a href="register.html">Sign Up</a>
+                        Don't have an account? <a href="register">Sign Up</a>
                      </div>
                   </div>
                </div>
@@ -229,8 +247,8 @@
 
       <script src="assets/vendors/jquery/jquery.js"></script>
       <script src="assets/vendors/bootstrap/js/bootstrap.min.js"></script>
-      <script src="assets/js/auth.js"></script>
-      <script src="assets/js/app.js"></script>
+      <script src="assets/js/auth.js?v=3.0"></script>
+      <script src="assets/js/app.js?v=3.0"></script>
       <script>
          document.getElementById('login-form').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -247,7 +265,7 @@
             if (result.success) {
                // Redirect to redirect parameter URL or default home page
                const urlParams = new URLSearchParams(window.location.search);
-               const redirect = urlParams.get('redirect') || 'index.html';
+               const redirect = urlParams.get('redirect') || 'index';
                window.location.href = decodeURIComponent(redirect);
             } else {
                errorMsg.textContent = result.error || 'Invalid username or password.';

@@ -1,4 +1,4 @@
-// Centralized configuration for Go Tour API connection
+const BACKEND_BASE_URL = 'https://go-tour-backend.onrender.com';
 const API_BASE_URL = 'https://go-tour-backend.onrender.com/api/v1';
 
 // Utility to get image URL (if it is a local upload path, prepend backend base URL, otherwise return as is)
@@ -32,7 +32,7 @@ function getImageUrl(url, name = '') {
 
     if (!url) return 'assets/images/placeholder.jpg';
     if (url.startsWith('/uploads/') || url.startsWith('/tours/media')) {
-        return `https://go-tour-backend.onrender.com${url}`;
+        return `${BACKEND_BASE_URL}${url}`;
     }
     return url;
 }
@@ -73,13 +73,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const path = window.location.pathname;
 
-    if (path.endsWith('index.html') || path === '/' || path.endsWith('/')) {
+    if (path.endsWith('index.html') || path.endsWith('/index') || path === '/' || path.endsWith('/')) {
         initHomePage();
-    } else if (path.endsWith('destination.html')) {
+    } else if (path.endsWith('destination.html') || path.endsWith('/destination')) {
         initDestinationsPage();
-    } else if (path.endsWith('package-detail.html')) {
+    } else if (path.endsWith('package-detail.html') || path.endsWith('/package-detail')) {
         initPackageDetailPage();
     }
+    // lucky-draw.html has its own inline script, no extra call needed here
 });
 
 // Home Page Rendering
@@ -104,7 +105,7 @@ async function initHomePage() {
                     <figure class="package-image" style="background-image: url(${img});"></figure>
                     <div class="package-content">
                        <h3>
-                          <a href="package-detail.html?id=${place.id}">
+                          <a href="package-detail?id=${place.id}">
                              ${place.name}
                           </a>
                        </h3>
@@ -132,8 +133,8 @@ async function initHomePage() {
                           / per person
                        </h6>
                        ${typeof isAuthenticated !== 'undefined' && isAuthenticated()
-                        ? `<a href="booking.html?id=${place.id}" class="outline-btn outline-btn-white">Book now</a>`
-                        : `<a href="login.html?redirect=booking.html?id=${place.id}" class="outline-btn outline-btn-white">Login to Book</a>`
+                        ? `<a href="booking?id=${place.id}" class="outline-btn outline-btn-white">Get Ticket</a>`
+                        : `<a href="login?redirect=booking?id=${place.id}" class="outline-btn outline-btn-white">Join Lucky Draw</a>`
                     }
                     </div>
                 `;
@@ -187,7 +188,7 @@ async function initHomePage() {
                              </ul>
                           </div>
                           <h3>
-                             <a href="package-detail.html?id=${deal.id}">${deal.name}</a>
+                             <a href="package-detail?id=${deal.id}">${deal.name}</a>
                           </h3>
                           <p>${deal.short_desc || ''}</p>
                           <div class="price-list">
@@ -195,9 +196,9 @@ async function initHomePage() {
                              ${deal.original_price ? `<del>₹${parseFloat(deal.original_price).toLocaleString()} </del>` : ''}
                              <ins>₹${parseFloat(deal.price).toLocaleString()}</ins>
                           </div>
-                          ${typeof isAuthenticated !== 'undefined' && isAuthenticated()
-                        ? `<a href="booking.html?id=${deal.id}" class="round-btn">Book Now</a>`
-                        : `<a href="login.html?redirect=booking.html?id=${deal.id}" class="round-btn">Login to Book</a>`
+                           ${typeof isAuthenticated !== 'undefined' && isAuthenticated()
+                        ? `<a href="booking?id=${deal.id}" class="round-btn">Get Ticket</a>`
+                        : `<a href="login?redirect=booking?id=${deal.id}" class="round-btn">Join Lucky Draw</a>`
                     }
                        </div>
                     </article>
@@ -221,7 +222,7 @@ async function initHomePage() {
                 col.className = 'col-lg-4 col-md-6';
                 col.innerHTML = `
                     <article class="destination-item" style="background-image: url(${img});">
-                       <a href="package-detail.html?id=${dest.id}">
+                       <a href="package-detail?id=${dest.id}">
                           <div class="destination-content">
                              <div class="rating-start-wrap">
                                 <div class="rating-start">
@@ -239,6 +240,59 @@ async function initHomePage() {
             });
         }
     }
+
+    // 4. Render Lucky Draw Promo Banner
+    initLuckyDrawPromoBanner();
+}
+
+// Lucky Draw promo banner on the homepage
+async function initLuckyDrawPromoBanner() {
+    const promoSection = document.getElementById('lucky-draw-promo');
+    if (!promoSection) return;
+
+    // Fetch active campaigns count
+    let activeCampaigns = 0;
+    try {
+        const res = await fetch(`${API_BASE_URL}/lucky-draws`);
+        if (res.ok) {
+            const data = await res.json();
+            const draws = data.data || [];
+            const now = new Date();
+            const liveDraws = draws.filter(draw => new Date(draw.start_date) <= now);
+            activeCampaigns = liveDraws.length;
+        }
+    } catch(e) { /* silent fail */ }
+
+    // Don't show if no active campaigns
+    if (activeCampaigns === 0) return;
+
+    const loggedIn = typeof isAuthenticated !== 'undefined' && isAuthenticated();
+    const ctaHref = loggedIn ? 'lucky-draw' : 'login?redirect=lucky-draw';
+    const ctaText = loggedIn ? '🏆 Enter Lucky Draw Now' : '🔑 Login to Enter';
+    const subtext = loggedIn
+        ? `${activeCampaigns} active campaign${activeCampaigns > 1 ? 's' : ''} — one ticket, one chance to win a free trip!`
+        : 'Create a free account and get a chance to win a fully-paid trip to your dream destination!';
+
+    promoSection.style.display = 'block';
+    promoSection.innerHTML = `
+        <div class="container">
+            <div class="ld-promo-inner">
+                <div class="ld-promo-icon">🏆</div>
+                <div class="ld-promo-content">
+                    <span class="ld-promo-tag">🎰 Lucky Draw</span>
+                    <h2>Win A <span>Free Dream Trip!</span></h2>
+                    <p>${subtext}</p>
+                </div>
+                <div class="ld-promo-actions">
+                    <div class="ld-draws-count">
+                        <span class="draws-num">${activeCampaigns}</span>
+                        <span class="draws-label">Active Draw${activeCampaigns > 1 ? 's' : ''}</span>
+                    </div>
+                    <a href="${ctaHref}" class="btn-ld-enter">${ctaText}</a>
+                </div>
+            </div>
+        </div>
+    `;
 }
 
 // Destinations Page Rendering
@@ -258,7 +312,7 @@ async function initDestinationsPage() {
                 col.className = 'col-lg-4 col-md-6';
                 col.innerHTML = `
                     <article class="destination-item" style="background-image: url(${img});">
-                       <a href="package-detail.html?id=${dest.id}">
+                       <a href="package-detail?id=${dest.id}">
                           <div class="destination-content">
                              <div class="rating-start-wrap">
                                 <div class="rating-start">
@@ -303,9 +357,151 @@ async function initPackageDetailPage() {
     const priceEl = document.querySelector('.package-price .price-list');
     if (priceEl) {
         priceEl.innerHTML = `
-            <span>₹${parseFloat(pkg.price).toLocaleString()}</span>
-            / per person
+            <span style="font-size: 15px; font-weight: 600; color: #626672; margin-right: 6px; display: inline-block; vertical-align: middle;">Actual Price:</span>
+            <span style="color: #3A78C9; font-size: 28px; font-weight: 800; display: inline-block !important; vertical-align: middle; margin-right: 4px;">₹${parseFloat(pkg.price).toLocaleString()}</span>
+            <span style="font-size: 14px; color: #626672; display: inline-block; vertical-align: middle;">/ per person</span>
         `;
+
+        // Check if package is included in a lucky draw and display ticket price
+        try {
+            const res = await fetch(`${API_BASE_URL}/lucky-draws`);
+            if (res.ok) {
+                const data = await res.json();
+                const draws = data.data || [];
+                const activeDraw = draws.find(draw => String(draw.destination_id) === String(pkg.id));
+                if (activeDraw) {
+                    const ticketPrice = parseFloat(activeDraw.ticket_price || 0);
+
+                    // Inject CSS styles into head for responsiveness and premium design
+                    if (!document.getElementById('lucky-draw-detail-styles')) {
+                        const styleEl = document.createElement('style');
+                        styleEl.id = 'lucky-draw-detail-styles';
+                        styleEl.textContent = `
+                            .single-packge-wrap .package-price {
+                                display: flex !important;
+                                flex-direction: column !important;
+                                align-items: center !important;
+                                justify-content: center !important;
+                                background: #ffffff !important;
+                                border: 1px solid #e2e8f0 !important;
+                                box-shadow: 0 10px 25px rgba(0,0,0,0.04) !important;
+                                padding: 24px 30px !important;
+                                margin-left: 20px !important;
+                                transition: all 0.3s ease !important;
+                                min-width: 240px !important;
+                                border-radius: 25px !important;
+                            }
+                            .single-packge-wrap .package-price:hover {
+                                box-shadow: 0 15px 35px rgba(0,0,0,0.08) !important;
+                                transform: translateY(-2px);
+                            }
+                            @media (min-width: 768px) {
+                                .single-packge-wrap .package-price {
+                                    align-items: flex-end !important;
+                                    text-align: right !important;
+                                }
+                            }
+                            @media (max-width: 767px) {
+                                .single-package-head {
+                                    flex-direction: column !important;
+                                    align-items: center !important;
+                                    text-align: center !important;
+                                }
+                                .single-packge-wrap .package-price {
+                                    margin-left: 0 !important;
+                                    margin-top: 20px !important;
+                                    width: 100% !important;
+                                    align-items: center !important;
+                                    text-align: center !important;
+                                }
+                            }
+                            .lucky-draw-ticket-btn {
+                                margin-top: 10px;
+                                padding: 8px 16px;
+                                background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%) !important;
+                                border-radius: 50px !important;
+                                box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3) !important;
+                                display: inline-flex !important;
+                                align-items: center !important;
+                                justify-content: center !important;
+                                border: 1px solid rgba(255, 215, 0, 0.6) !important;
+                                cursor: pointer !important;
+                                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+                                position: relative !important;
+                                overflow: hidden !important;
+                                text-decoration: none !important;
+                            }
+                            .lucky-draw-ticket-btn::before {
+                                content: '';
+                                position: absolute;
+                                top: 0;
+                                left: -150%;
+                                width: 50%;
+                                height: 100%;
+                                background: linear-gradient(
+                                    to right,
+                                    rgba(255, 255, 255, 0) 0%,
+                                    rgba(255, 255, 255, 0.4) 50%,
+                                    rgba(255, 255, 255, 0) 100%
+                                );
+                                transform: skewX(-25deg);
+                                pointer-events: none;
+                            }
+                            .lucky-draw-ticket-btn:hover::before {
+                                animation: shine-glint 1.5s infinite;
+                            }
+                            @keyframes shine-glint {
+                                0% { left: -150%; }
+                                50% { left: 150%; }
+                                100% { left: 150%; }
+                            }
+                            .lucky-draw-ticket-btn:hover {
+                                transform: translateY(-3px) scale(1.02) !important;
+                                box-shadow: 0 8px 20px rgba(255, 140, 0, 0.5), 0 0 0 3px rgba(255, 215, 0, 0.2) !important;
+                                text-decoration: none !important;
+                            }
+                            .lucky-draw-ticket-btn:active {
+                                transform: translateY(-1px) scale(0.98) !important;
+                            }
+                            .lucky-draw-ticket-btn a {
+                                text-decoration: none !important;
+                                display: flex !important;
+                                align-items: center !important;
+                                gap: 6px !important;
+                                color: #1a1a2e !important;
+                                font-weight: 800 !important;
+                                font-size: 11px !important;
+                                text-transform: uppercase !important;
+                                letter-spacing: 0.5px !important;
+                            }
+                            .lucky-draw-ticket-btn i {
+                                font-size: 12px !important;
+                                color: #1a1a2e !important;
+                                animation: bounce-trophy 2.5s infinite ease-in-out;
+                            }
+                            @keyframes bounce-trophy {
+                                0%, 100% { transform: translateY(0) rotate(0); }
+                                50% { transform: translateY(-3px) rotate(12deg); }
+                            }
+                        `;
+                        document.head.appendChild(styleEl);
+                    }
+
+                    const ticketPriceEl = document.createElement('div');
+                    ticketPriceEl.className = 'lucky-draw-ticket-btn';
+                    ticketPriceEl.innerHTML = `
+                        <a href="lucky-draw">
+                            <i class="fas fa-ticket-alt"></i>
+                            <span>Lucky Draw Ticket: ₹${ticketPrice.toLocaleString()}</span>
+                        </a>
+                    `;
+
+                    priceEl.parentNode.insertBefore(ticketPriceEl, priceEl.nextSibling);
+                }
+            }
+        } catch (e) {
+            console.error('Failed to load lucky draw for package detail:', e);
+        }
     }
 
     // Bind package meta details (duration, pax, category, location)
@@ -367,14 +563,14 @@ async function initPackageDetailPage() {
         const bookingSubmitBtn = bookingForm.querySelector('button[type="submit"]');
         const loggedIn = typeof isAuthenticated !== 'undefined' && isAuthenticated();
         if (bookingSubmitBtn) {
-            bookingSubmitBtn.textContent = loggedIn ? 'ENQUIRY NOW' : 'LOGIN TO BOOK';
+            bookingSubmitBtn.textContent = loggedIn ? 'ENQUIRY NOW' : 'JOIN LUCKY DRAW';
         }
         bookingForm.addEventListener('submit', (e) => {
             e.preventDefault();
             if (loggedIn) {
-                window.location.href = `booking.html?id=${pkg.id}`;
+                window.location.href = `booking?id=${pkg.id}`;
             } else {
-                window.location.href = `login.html?redirect=booking.html?id=${pkg.id}`;
+                window.location.href = `login?redirect=booking?id=${pkg.id}`;
             }
         });
     }
@@ -579,89 +775,46 @@ function formatItineraryItem(htmlContent, index) {
 
 // Update header navigation elements dynamically based on user session status
 function updateNavigationHeader() {
-    const navUl = document.querySelector('#navigation ul');
     const navContainer = document.querySelector('.navigation-container');
-    const headerBtn = document.querySelector('.header-btn a');
+    const headerBtn = document.querySelector('.header-btn');
     const path = window.location.pathname;
 
-    // Check if on login or register page
-    if (path.endsWith('login.html') || path.endsWith('register.html')) {
-        if (navContainer) {
-            navContainer.style.setProperty('display', 'none', 'important');
-        }
-        if (headerBtn) {
-            headerBtn.style.setProperty('display', 'none', 'important');
-        }
+    // Check if on login or register page — hide nav entirely
+    if (path.endsWith('login.html') || path.endsWith('/login') || path.endsWith('register.html') || path.endsWith('/register')) {
+        if (navContainer) navContainer.style.setProperty('display', 'none', 'important');
+        if (headerBtn)   headerBtn.style.setProperty('display', 'none', 'important');
         return;
+    }
+
+    // All other pages: ensure nav container is visible
+    if (navContainer) navContainer.style.display = '';
+    if (headerBtn)   headerBtn.style.display = '';
+
+    // Synchronize document classes in case they weren't set yet
+    const loggedIn = !!localStorage.getItem('api_token');
+    if (loggedIn) {
+        document.documentElement.classList.remove('user-guest');
+        document.documentElement.classList.add('user-logged-in');
     } else {
-        // Reset display settings for other pages
-        if (navContainer) {
-            navContainer.style.display = '';
-        }
-        if (headerBtn) {
-            headerBtn.style.display = '';
-        }
+        document.documentElement.classList.remove('user-logged-in');
+        document.documentElement.classList.add('user-guest');
     }
 
-    if (!navUl) return;
-
-    // Check if auth.js is loaded
-    if (typeof isAuthenticated === 'undefined') return;
-
-    // Ensure 'My Trips' link is always present in the navbar for all users
-    let myTripsLi = Array.from(navUl.children).find(li => li.textContent.trim().toLowerCase().includes('my trips'));
-    if (!myTripsLi) {
-        myTripsLi = document.createElement('li');
-        myTripsLi.innerHTML = '<a href="destination.html">My Trips</a>';
-        // Insert before Gallery or at the end of default links
-        const galleryLi = Array.from(navUl.children).find(li => li.textContent.trim().toLowerCase().includes('gallery'));
-        if (galleryLi) {
-            navUl.insertBefore(myTripsLi, galleryLi);
-        } else {
-            navUl.appendChild(myTripsLi);
-        }
-    }
-
-    if (isAuthenticated()) {
-        if (headerBtn) {
-            headerBtn.textContent = 'Book Now';
-            headerBtn.href = 'booking.html';
-        }
-
-        // Add Logout button if not already present
-        let logoutLi = Array.from(navUl.children).find(li => li.textContent.trim().toLowerCase().includes('logout'));
-        if (!logoutLi) {
-            logoutLi = document.createElement('li');
-            logoutLi.innerHTML = '<a href="#" id="auth-logout-btn" style="color: #d9383a; font-weight: bold;">Logout</a>';
-            navUl.appendChild(logoutLi);
-
-            document.getElementById('auth-logout-btn').addEventListener('click', (e) => {
+    // Bind logout click handlers to all .nav-btn-logout buttons
+    document.querySelectorAll('.nav-btn-logout').forEach(btn => {
+        if (!btn.dataset.logoutBound) {
+            btn.dataset.logoutBound = '1';
+            btn.addEventListener('click', (e) => {
                 e.preventDefault();
-                logoutUser();
+                if (typeof logoutUser === 'function') {
+                    logoutUser();
+                } else {
+                    localStorage.removeItem('api_token');
+                    localStorage.removeItem('user_data');
+                    window.location.href = 'login';
+                }
             });
         }
-
-        // Remove Login link if present
-        const loginLi = Array.from(navUl.children).find(li => li.textContent.trim().toLowerCase().includes('login'));
-        if (loginLi) {
-            loginLi.remove();
-        }
-    } else {
-        if (headerBtn) {
-            headerBtn.textContent = 'Login';
-            headerBtn.href = 'login.html';
-        }
-
-        // Guest user: hide Logout and remove Login link from navbar list
-        const logoutLi = Array.from(navUl.children).find(li => li.textContent.trim().toLowerCase().includes('logout'));
-        if (logoutLi) {
-            logoutLi.remove();
-        }
-
-        const loginLi = Array.from(navUl.children).find(li => li.textContent.trim().toLowerCase().includes('login'));
-        if (loginLi) {
-            loginLi.remove();
-        }
-    }
+    });
 }
 

@@ -85,18 +85,18 @@ async function registerUser(name, email, password) {
 function logoutUser() {
     localStorage.removeItem('api_token');
     localStorage.removeItem('user_data');
-    window.location.href = 'login.html';
+    window.location.href = 'login';
 }
 
 // Protect pages from unauthenticated guests
 function checkPageAuthentication() {
-    const protectedPages = ['booking.html', 'confirmation.html'];
+    const protectedPages = ['booking', 'confirmation'];
     const currentPath = window.location.pathname;
-    const isProtected = protectedPages.some(page => currentPath.endsWith(page));
+    const isProtected = protectedPages.some(page => currentPath.endsWith(page) || currentPath.endsWith(page + '.html'));
     
     if (isProtected && !isAuthenticated()) {
         const redirectParam = encodeURIComponent(window.location.search ? currentPath + window.location.search : currentPath);
-        window.location.href = `login.html?redirect=${redirectParam}`;
+        window.location.href = `login?redirect=${redirectParam}`;
     }
 }
 

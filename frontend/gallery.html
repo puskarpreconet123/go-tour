@@ -16,6 +16,20 @@
       <link rel="stylesheet" type="text/css" href="assets/vendors/slick/slick-theme.css">
       <link rel="stylesheet" type="text/css" href="style.css">
       <title>Gotour</title>
+      <script>
+         (function() {
+            const token = localStorage.getItem('api_token');
+            if (token) {
+               document.documentElement.classList.add('user-logged-in');
+            } else {
+               document.documentElement.classList.add('user-guest');
+            }
+            const path = window.location.pathname;
+            if (path.endsWith('login') || path.endsWith('login.html') || path.endsWith('register') || path.endsWith('register.html')) {
+               document.documentElement.classList.add('hide-nav-completely');
+            }
+         })();
+      </script>
    </head>
    <body class="home">
       <div id="page" class="page">
@@ -27,7 +41,7 @@
                     
                      <div class="site-logo text-center">
                         <h1 class="site-title">
-                           <a href="index.html">
+                           <a href="index">
                               <img src="assets/images/site-logo.png" alt="Logo" class="default-logo">
                               <img src="assets/images/site-logo2.png" alt="Logo" class="fixed-logo">
                            </a>
@@ -37,26 +51,30 @@
                         <nav id="navigation" class="navigation">
                            <ul>
                               <li>
-                                 <a href="index.html">Home</a>
+                                 <a href="index">Home</a>
                               </li>
                               <li>
-                                 <a href="about.html">about us</a>
+                                 <a href="about">about us</a>
                               </li>
-                              <li>
-                                 <a href="destination.html">My Trips</a>
-                              </li>
-                              <li class="menu-active">
-                                 <a href="gallery.html">Gallery</a>
-                              </li>
-                              <li>
-                                 <a href="contact.html">contact us</a>
-                              </li>
-                           </ul>
-                        </nav>
-                     </div>
-                     <div class="header-btn">
-                        <a href="login.html" class="round-btn">Login</a>
-                     </div>
+                               <li>
+                                  <a href="destination">My Trips</a>
+                               </li>
+                               <li class="nav-lucky-draw">
+                                  <a href="lucky-draw" style="color:#f7b731;font-weight:700;">🏆 Lucky Draw</a>
+                               </li>
+                               <li class="menu-active">
+                                  <a href="gallery">Gallery</a>
+                               </li>
+                               <li>
+                                  <a href="contact">contact us</a>
+                               </li>
+                            </ul>
+                         </nav>
+                      </div>
+                      <div class="header-btn">
+                         <a href="login" class="round-btn nav-btn-login">Login</a>
+                         <a href="#" class="round-btn nav-btn-logout" style="background: linear-gradient(135deg, rgb(217, 56, 58), rgb(183, 28, 28)) !important; color: rgb(255, 255, 255) !important; display: none;">Logout</a>
+                      </div>
                   </div>
                </div>
             </div>
@@ -64,7 +82,7 @@
                <div class="mobile-menu-header d-flex justify-content-between align-items-center">
                   <div class="site-logo text-center">
                      <h1 class="site-title">
-                        <a href="index.html">
+                        <a href="index">
                            <img src="assets/images/site-logo.png" alt="Logo" class="default-logo">
                            <img src="assets/images/site-logo2.png" alt="Logo" class="fixed-logo">
                         </a>
@@ -168,7 +186,7 @@
                         <div class="col-lg-3 col-sm-6">
                            <aside class="widget widget_text">
                               <div class="footer-logo">
-                                 <a href="index.html"><img src="assets/images/site-logo.png" alt=""></a>
+                                 <a href="index"><img src="assets/images/site-logo.png" alt=""></a>
                               </div>
                               <div class="textwidget widget-text">
                                  Gotour is your trusted travel partner for domestic and international holidays, offering customized tour packages, hotel bookings, sightseeing, and unforgettable travel experiences.
@@ -181,31 +199,31 @@
                               <div class="textwidget widget-text">
                                  <ul>
                                     <li class="mb-0 pb-2">
-                                       <a href="index.html">
+                                       <a href="index">
                                           <i aria-hidden="true" class="icon icon-chevron-right-circle"></i>
                                           Home
                                        </a>
                                     </li>
                                     <li class="mb-0 pb-2">
-                                       <a href="about.html">
+                                       <a href="about">
                                           <i aria-hidden="true" class="icon icon-chevron-right-circle"></i>
                                           About us
                                        </a>
                                     </li>
                                     <li class="mb-0 pb-2">
-                                       <a href="my-trips.html">
+                                       <a href="destination">
                                           <i aria-hidden="true" class="icon icon-chevron-right-circle"></i>
                                           My Trips
                                        </a>
                                     </li>
                                     <li class="mb-0 pb-2">
-                                       <a href="gallery.html">
+                                       <a href="gallery">
                                           <i aria-hidden="true" class="icon icon-chevron-right-circle"></i>
                                           Gallery
                                        </a>
                                     </li>
                                     <li class="mb-0 pb-2">
-                                       <a href="contact.html">
+                                       <a href="contact">
                                           <i aria-hidden="true" class="icon icon-chevron-right-circle"></i>
                                          Contact us
                                        </a>
@@ -312,8 +330,8 @@
       <script src="assets/vendors/fancybox/dist/jquery.fancybox.min.js"></script>
       <script src="assets/vendors/slick-nav/jquery.slicknav.js"></script>
       <script src="assets/js/custom.min.js"></script>
-      <script src="assets/js/auth.js"></script>
-      <script src="assets/js/app.js"></script>
+      <script src="assets/js/auth.js?v=3.0"></script>
+      <script src="assets/js/app.js?v=3.0"></script>
    </body>
 
 </html>

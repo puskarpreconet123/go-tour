@@ -7152,3 +7152,205 @@ MODERN MOBILE MENU
   }
 }
 /*# sourceMappingURL=style.css.map */
+
+/* ================================================================
+   LUCKY DRAW PROMO BANNER (Homepage)
+================================================================ */
+.lucky-draw-promo-section {
+  background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+  padding: 70px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.lucky-draw-promo-section::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: rgba(255, 215, 0, 0.06);
+  pointer-events: none;
+}
+
+.lucky-draw-promo-section::after {
+  content: '';
+  position: absolute;
+  bottom: -80px;
+  left: -40px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: rgba(255, 100, 150, 0.06);
+  pointer-events: none;
+}
+
+.ld-promo-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 50px;
+  flex-wrap: wrap;
+}
+
+.ld-promo-inner .ld-promo-icon {
+  font-size: 80px;
+  line-height: 1;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 25px rgba(255,215,0,0.5));
+  animation: ld-bounce 2.5s ease-in-out infinite;
+}
+
+@keyframes ld-bounce {
+  0%, 100% { transform: translateY(0) rotate(-5deg); }
+  50%       { transform: translateY(-12px) rotate(5deg); }
+}
+
+.ld-promo-inner .ld-promo-content {
+  flex: 1;
+  min-width: 240px;
+}
+
+.ld-promo-inner .ld-promo-content .ld-promo-tag {
+  display: inline-block;
+  background: linear-gradient(90deg, #ffd700, #ff9500);
+  color: #1a1a2e;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  padding: 4px 16px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+
+.ld-promo-inner .ld-promo-content h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 36px;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 10px;
+  line-height: 1.15;
+}
+
+.ld-promo-inner .ld-promo-content h2 span {
+  background: linear-gradient(90deg, #ffd700, #ff6b6b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.ld-promo-inner .ld-promo-content p {
+  color: rgba(255,255,255,0.65);
+  font-size: 15px;
+  margin-bottom: 0;
+  max-width: 420px;
+  line-height: 1.7;
+}
+
+.ld-promo-inner .ld-promo-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.ld-promo-inner .ld-promo-actions .ld-draws-count {
+  text-align: center;
+}
+
+.ld-draws-count .draws-num {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 40px;
+  font-weight: 900;
+  color: #ffd700;
+  line-height: 1;
+}
+
+.ld-draws-count .draws-label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.45);
+  margin-top: 4px;
+}
+
+.btn-ld-enter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #ffd700, #ff9500);
+  color: #1a1a2e;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 16px 32px;
+  border-radius: 50px;
+  text-decoration: none;
+  box-shadow: 0 8px 30px rgba(255, 149, 0, 0.4);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-ld-enter:hover {
+  background: linear-gradient(135deg, #fff, #ffe680);
+  color: #1a1a2e;
+  transform: translateY(-3px);
+  box-shadow: 0 14px 40px rgba(255, 149, 0, 0.5);
+  text-decoration: none;
+}
+
+@media (max-width: 767px) {
+  .ld-promo-inner {
+    flex-direction: column;
+    text-align: center;
+    gap: 30px;
+  }
+  .ld-promo-inner .ld-promo-actions {
+    align-items: center;
+    width: 100%;
+  }
+  .ld-promo-inner .ld-promo-content h2 {
+    font-size: 26px;
+  }
+  .ld-promo-inner .ld-promo-icon {
+    font-size: 60px;
+  }
+}
+
+/* Navigation items stable show/hide to prevent flickering */
+.navigation-container .navigation > ul > li.nav-lucky-draw,
+.slicknav_nav li.nav-lucky-draw {
+    display: none !important;
+}
+.user-logged-in .navigation-container .navigation > ul > li.nav-lucky-draw {
+    display: inline-block !important;
+}
+.user-logged-in .slicknav_nav li.nav-lucky-draw {
+    display: block !important;
+}
+
+/* Header Login/Logout buttons stable show/hide to prevent flickering */
+.header-btn .nav-btn-login,
+.header-btn .nav-btn-logout {
+    display: none !important;
+}
+.user-guest .header-btn .nav-btn-login {
+    display: inline-block !important;
+}
+.user-logged-in .header-btn .nav-btn-logout {
+    display: inline-block !important;
+}
+
+/* Hide entire navigation on login/register pages */
+.hide-nav-completely .navigation-container,
+.hide-nav-completely .header-btn {
+    display: none !important;
+}

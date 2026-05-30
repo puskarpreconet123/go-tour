@@ -1,0 +1,1456 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+   <!-- Required meta tags -->
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   <meta name="description" content="Enter Go Tour's exclusive Lucky Draw campaigns and win a free trip to your dream destination!">
+   <meta name="title" content="Lucky Draw – Win A Free Trip | Gotour">
+
+   <link rel="icon" type="image/png" href="assets/images/favicon.png">
+   <link rel="stylesheet" href="assets/vendors/bootstrap/css/bootstrap.min.css" media="all">
+   <link rel="stylesheet" type="text/css" href="assets/vendors/fontawesome/css/all.min.css">
+   <link rel="stylesheet" type="text/css" href="assets/vendors/elementskit-icon-pack/assets/css/ekiticons.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Lucky Draw – Win A Free Trip | Gotour</title>
+    <script>
+       (function() {
+          const token = localStorage.getItem('api_token');
+          if (token) {
+             document.documentElement.classList.add('user-logged-in');
+          } else {
+             document.documentElement.classList.add('user-guest');
+          }
+          const path = window.location.pathname;
+          if (path.endsWith('login') || path.endsWith('login.html') || path.endsWith('register') || path.endsWith('register.html')) {
+             document.documentElement.classList.add('hide-nav-completely');
+          }
+       })();
+    </script>
+
+    <style>
+      /* =====================================================
+         LUCKY DRAW PAGE STYLES
+      ===================================================== */
+
+      /* Hero Banner */
+      .lucky-draw-hero {
+         position: relative;
+         background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+         min-height: 340px;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         overflow: hidden;
+         text-align: center;
+         padding: 80px 20px 60px;
+      }
+
+      .lucky-draw-hero::before {
+         content: '';
+         position: absolute;
+         inset: 0;
+         background: url('assets/images/slider8.jpg') center/cover no-repeat;
+         opacity: 0.18;
+      }
+
+      /* Floating particles effect */
+      .hero-particles {
+         position: absolute;
+         inset: 0;
+         overflow: hidden;
+         pointer-events: none;
+      }
+
+      .hero-particles span {
+         position: absolute;
+         display: block;
+         width: 6px;
+         height: 6px;
+         border-radius: 50%;
+         background: rgba(255, 215, 0, 0.6);
+         animation: float-particle 6s linear infinite;
+      }
+
+      .hero-particles span:nth-child(1)  { left: 10%; animation-delay: 0s;   animation-duration: 7s;  }
+      .hero-particles span:nth-child(2)  { left: 25%; animation-delay: 1.5s; animation-duration: 5s;  width: 4px; height: 4px; background: rgba(255,100,150,0.7); }
+      .hero-particles span:nth-child(3)  { left: 40%; animation-delay: 0.8s; animation-duration: 8s;  width: 8px; height: 8px; }
+      .hero-particles span:nth-child(4)  { left: 60%; animation-delay: 2.2s; animation-duration: 6s;  background: rgba(100,200,255,0.7); }
+      .hero-particles span:nth-child(5)  { left: 75%; animation-delay: 0.3s; animation-duration: 9s;  width: 5px; height: 5px; background: rgba(180,100,255,0.7); }
+      .hero-particles span:nth-child(6)  { left: 88%; animation-delay: 1.1s; animation-duration: 7s;  width: 3px; height: 3px; }
+      .hero-particles span:nth-child(7)  { left: 55%; animation-delay: 3.0s; animation-duration: 5s;  background: rgba(255,200,50,0.8); width: 4px; height: 4px; }
+      .hero-particles span:nth-child(8)  { left: 35%; animation-delay: 2.6s; animation-duration: 8s;  background: rgba(100,255,180,0.6); }
+
+      @keyframes float-particle {
+         0%   { transform: translateY(120%) scale(0); opacity: 0; }
+         10%  { opacity: 1; }
+         90%  { opacity: 0.8; }
+         100% { transform: translateY(-120vh) scale(1.2); opacity: 0; }
+      }
+
+      .lucky-draw-hero .hero-inner {
+         position: relative;
+         z-index: 2;
+      }
+
+      .lucky-draw-hero .trophy-icon {
+         font-size: 64px;
+         line-height: 1;
+         margin-bottom: 16px;
+         display: block;
+         filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.7));
+         animation: trophy-pulse 2.5s ease-in-out infinite;
+      }
+
+      @keyframes trophy-pulse {
+         0%, 100% { transform: scale(1) rotate(-3deg); }
+         50%       { transform: scale(1.08) rotate(3deg); }
+      }
+
+      .lucky-draw-hero h1 {
+         font-family: 'Montserrat', sans-serif;
+         font-size: 48px;
+         font-weight: 900;
+         color: #fff;
+         margin-bottom: 12px;
+         text-shadow: 0 4px 20px rgba(0,0,0,0.4);
+         letter-spacing: -1px;
+         line-height: 1.1;
+      }
+
+      .lucky-draw-hero h1 span {
+         background: linear-gradient(90deg, #ffd700, #ff9f00);
+         -webkit-background-clip: text;
+         -webkit-text-fill-color: transparent;
+         background-clip: text;
+      }
+
+      .lucky-draw-hero p {
+         color: rgba(255,255,255,0.8);
+         font-size: 17px;
+         max-width: 540px;
+         margin: 0 auto 0;
+         line-height: 1.6;
+      }
+
+      /* ---- Auth Notice ---- */
+      .lucky-draw-auth-notice {
+         background: linear-gradient(135deg, #fff7e6, #fff3d4);
+         border: 2px solid #ffc107;
+         border-radius: 20px;
+         padding: 40px 30px;
+         text-align: center;
+         max-width: 500px;
+         margin: 60px auto;
+         box-shadow: 0 8px 40px rgba(255,193,7,0.15);
+      }
+
+      .lucky-draw-auth-notice .lock-icon {
+         font-size: 52px;
+         margin-bottom: 16px;
+         display: block;
+      }
+
+      .lucky-draw-auth-notice h3 {
+         font-family: 'Montserrat', sans-serif;
+         font-size: 22px;
+         font-weight: 800;
+         color: #1a1a2e;
+         margin-bottom: 10px;
+      }
+
+      .lucky-draw-auth-notice p {
+         color: #555;
+         margin-bottom: 24px;
+         font-size: 15px;
+      }
+
+      /* ---- Stats bar ---- */
+      .lucky-draw-stats {
+         background: linear-gradient(90deg, #1a1a2e 0%, #16213e 50%, #1a1a2e 100%);
+         padding: 20px 0;
+      }
+
+      .lucky-draw-stats .stats-inner {
+         display: flex;
+         justify-content: center;
+         gap: 60px;
+         flex-wrap: wrap;
+      }
+
+      .lucky-draw-stats .stat-item {
+         text-align: center;
+         color: #fff;
+      }
+
+      .lucky-draw-stats .stat-item .stat-number {
+         font-size: 28px;
+         font-weight: 900;
+         font-family: 'Montserrat', sans-serif;
+         color: #ffd700;
+         display: block;
+         line-height: 1;
+      }
+
+      .lucky-draw-stats .stat-item .stat-label {
+         font-size: 11px;
+         text-transform: uppercase;
+         letter-spacing: 1.5px;
+         color: rgba(255,255,255,0.55);
+         margin-top: 4px;
+         display: block;
+      }
+
+      /* ---- Main Section ---- */
+      .lucky-draw-section {
+         padding: 70px 0 90px;
+         background: #f5f7fa;
+      }
+
+      .section-badge {
+         display: inline-flex;
+         align-items: center;
+         gap: 8px;
+         background: linear-gradient(135deg, #ff6b35, #f7b731);
+         color: #fff;
+         font-size: 11px;
+         font-weight: 800;
+         letter-spacing: 2px;
+         text-transform: uppercase;
+         padding: 6px 18px;
+         border-radius: 30px;
+         margin-bottom: 16px;
+         box-shadow: 0 4px 15px rgba(247,183,49,0.35);
+      }
+
+      .lucky-draw-section .section-title-main {
+         font-family: 'Montserrat', sans-serif;
+         font-size: 36px;
+         font-weight: 900;
+         color: #1a1a2e;
+         margin-bottom: 8px;
+         line-height: 1.2;
+      }
+
+      .lucky-draw-section .section-subtitle {
+         color: #6b7280;
+         font-size: 16px;
+         max-width: 520px;
+         margin: 0 auto 50px;
+         line-height: 1.6;
+      }
+
+      /* ---- Campaign Cards ---- */
+      .campaign-card {
+         background: #fff;
+         border-radius: 24px;
+         overflow: hidden;
+         box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+         transition: transform 0.3s ease, box-shadow 0.3s ease;
+         height: 100%;
+         display: flex;
+         flex-direction: column;
+         position: relative;
+      }
+
+      .campaign-card:hover {
+         transform: translateY(-8px);
+         box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+      }
+
+      .campaign-card .card-image {
+         position: relative;
+         height: 220px;
+         overflow: hidden;
+      }
+
+      .campaign-card .card-image img {
+         width: 100%;
+         height: 100%;
+         object-fit: cover;
+         transition: transform 0.5s ease;
+      }
+
+      .campaign-card:hover .card-image img {
+         transform: scale(1.06);
+      }
+
+      .campaign-card .card-image .image-overlay {
+         position: absolute;
+         inset: 0;
+         background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%);
+      }
+
+      /* Prize badge on image */
+      .campaign-card .prize-badge {
+         position: absolute;
+         top: 16px;
+         left: 16px;
+         background: linear-gradient(135deg, #ffd700, #ff9500);
+         color: #1a1a2e;
+         font-size: 11px;
+         font-weight: 900;
+         letter-spacing: 1px;
+         text-transform: uppercase;
+         padding: 5px 14px;
+         border-radius: 20px;
+         box-shadow: 0 4px 12px rgba(255,149,0,0.4);
+         display: flex;
+         align-items: center;
+         gap: 5px;
+      }
+
+      /* Status badge */
+      .campaign-card .status-badge {
+         position: absolute;
+         top: 16px;
+         right: 16px;
+         font-size: 10px;
+         font-weight: 800;
+         letter-spacing: 1px;
+         text-transform: uppercase;
+         padding: 5px 12px;
+         border-radius: 20px;
+      }
+
+      .status-badge.active {
+         background: rgba(16, 185, 129, 0.92);
+         color: #fff;
+         box-shadow: 0 2px 12px rgba(16,185,129,0.4);
+      }
+
+      .status-badge.upcoming {
+         background: rgba(245, 158, 11, 0.92);
+         color: #fff;
+         box-shadow: 0 2px 12px rgba(245,158,11,0.4);
+      }
+
+
+      /* Ticket price on image */
+      .campaign-card .ticket-price-badge {
+         position: absolute;
+         bottom: 16px;
+         right: 16px;
+         background: rgba(255,255,255,0.95);
+         backdrop-filter: blur(8px);
+         border-radius: 12px;
+         padding: 8px 14px;
+         text-align: right;
+         box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      }
+
+      .ticket-price-badge .price-label {
+         font-size: 9px;
+         text-transform: uppercase;
+         letter-spacing: 1px;
+         color: #9ca3af;
+         display: block;
+      }
+
+      .ticket-price-badge .price-value {
+         font-size: 20px;
+         font-weight: 900;
+         color: #1a1a2e;
+         font-family: 'Montserrat', sans-serif;
+         line-height: 1;
+      }
+
+      /* Card body */
+      .campaign-card .card-body-content {
+         padding: 24px;
+         flex: 1;
+         display: flex;
+         flex-direction: column;
+      }
+
+      .campaign-card .campaign-destination {
+         font-family: 'Montserrat', sans-serif;
+         font-size: 20px;
+         font-weight: 800;
+         color: #1a1a2e;
+         margin-bottom: 6px;
+         line-height: 1.2;
+      }
+
+      .campaign-card .campaign-location {
+         color: #6b7280;
+         font-size: 13px;
+         margin-bottom: 16px;
+         display: flex;
+         align-items: center;
+         gap: 5px;
+      }
+
+      .campaign-card .campaign-location i {
+         color: #ef4444;
+      }
+
+      /* Countdown timer */
+      .campaign-card .countdown-wrap {
+         background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+         border-radius: 14px;
+         padding: 14px 16px;
+         margin-bottom: 18px;
+         border: 1px solid #ddd6fe;
+      }
+
+      .countdown-wrap .countdown-label {
+         font-size: 10px;
+         text-transform: uppercase;
+         letter-spacing: 1.5px;
+         color: #7c3aed;
+         font-weight: 700;
+         margin-bottom: 10px;
+         display: flex;
+         align-items: center;
+         gap: 5px;
+      }
+
+      .countdown-wrap .countdown-timer {
+         display: flex;
+         gap: 10px;
+         justify-content: space-around;
+      }
+
+      .countdown-timer .time-unit {
+         text-align: center;
+         flex: 1;
+      }
+
+      .countdown-timer .time-unit .time-value {
+         display: block;
+         font-size: 24px;
+         font-weight: 900;
+         font-family: 'Montserrat', sans-serif;
+         color: #4c1d95;
+         line-height: 1;
+         background: rgba(255,255,255,0.7);
+         border-radius: 8px;
+         padding: 6px 4px;
+         min-width: 44px;
+      }
+
+      .countdown-timer .time-unit .time-label {
+         display: block;
+         font-size: 9px;
+         text-transform: uppercase;
+         letter-spacing: 1px;
+         color: #8b5cf6;
+         margin-top: 4px;
+      }
+
+      /* Tickets info bar */
+      .campaign-card .tickets-info {
+         display: flex;
+         align-items: center;
+         justify-content: space-between;
+         margin-bottom: 20px;
+         padding: 10px 14px;
+         background: #f9fafb;
+         border-radius: 12px;
+         border: 1px solid #f3f4f6;
+      }
+
+      .tickets-info .info-item {
+         text-align: center;
+      }
+
+      .tickets-info .info-value {
+         font-size: 16px;
+         font-weight: 800;
+         color: #1a1a2e;
+         display: block;
+         font-family: 'Montserrat', sans-serif;
+      }
+
+      .tickets-info .info-label {
+         font-size: 10px;
+         text-transform: uppercase;
+         letter-spacing: 1px;
+         color: #9ca3af;
+      }
+
+      .tickets-info .info-divider {
+         width: 1px;
+         height: 30px;
+         background: #e5e7eb;
+      }
+
+      /* CTA button */
+      .campaign-card .btn-buy-ticket {
+         background: linear-gradient(135deg, #302b63, #0f0c29);
+         color: #fff;
+         border: none;
+         border-radius: 14px;
+         padding: 14px 24px;
+         font-size: 14px;
+         font-weight: 800;
+         letter-spacing: 0.5px;
+         text-transform: uppercase;
+         cursor: pointer;
+         transition: all 0.3s ease;
+         width: 100%;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         gap: 8px;
+         margin-top: auto;
+         text-decoration: none;
+      }
+
+      .campaign-card .btn-buy-ticket:hover {
+         background: linear-gradient(135deg, #ffd700, #ff9500);
+         color: #1a1a2e;
+         transform: translateY(-2px);
+         box-shadow: 0 8px 25px rgba(255,149,0,0.35);
+         text-decoration: none;
+      }
+
+      .campaign-card .btn-buy-ticket.already-entered {
+         background: linear-gradient(135deg, #10b981, #059669);
+         cursor: default;
+      }
+
+      .campaign-card .btn-buy-ticket.already-entered:hover {
+         background: linear-gradient(135deg, #10b981, #059669);
+         transform: none;
+         box-shadow: 0 4px 15px rgba(16,185,129,0.3);
+         color: #fff;
+      }
+
+      /* --- Skeleton loaders --- */
+      .campaign-skeleton {
+         background: #fff;
+         border-radius: 24px;
+         overflow: hidden;
+         box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+         height: 480px;
+      }
+
+      .skeleton-img {
+         width: 100%;
+         height: 220px;
+         background: linear-gradient(90deg, #e9ecef 25%, #f5f5f5 50%, #e9ecef 75%);
+         background-size: 200% 100%;
+         animation: skeleton-shimmer 1.4s infinite;
+      }
+
+      .skeleton-body {
+         padding: 24px;
+      }
+
+      .skeleton-line {
+         height: 16px;
+         background: linear-gradient(90deg, #e9ecef 25%, #f5f5f5 50%, #e9ecef 75%);
+         background-size: 200% 100%;
+         animation: skeleton-shimmer 1.4s infinite;
+         border-radius: 8px;
+         margin-bottom: 12px;
+      }
+
+      @keyframes skeleton-shimmer {
+         0%   { background-position: 200% 0; }
+         100% { background-position: -200% 0; }
+      }
+
+      /* ---- No draws state ---- */
+      .no-draws-state {
+         text-align: center;
+         padding: 80px 30px;
+         max-width: 480px;
+         margin: 0 auto;
+      }
+
+      .no-draws-state .state-icon {
+         font-size: 72px;
+         margin-bottom: 20px;
+         display: block;
+         opacity: 0.4;
+      }
+
+      .no-draws-state h3 {
+         font-family: 'Montserrat', sans-serif;
+         font-size: 24px;
+         font-weight: 800;
+         color: #374151;
+         margin-bottom: 10px;
+      }
+
+      .no-draws-state p {
+         color: #9ca3af;
+         font-size: 15px;
+         line-height: 1.6;
+      }
+
+      /* ---- How It Works section ---- */
+      .how-it-works {
+         background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+         padding: 70px 0;
+      }
+
+      .how-it-works .section-title-main {
+         color: #fff;
+         font-family: 'Montserrat', sans-serif;
+         font-size: 32px;
+         font-weight: 900;
+         margin-bottom: 8px;
+      }
+
+      .how-it-works .section-subtitle {
+         color: rgba(255,255,255,0.55);
+         font-size: 15px;
+      }
+
+      .step-card {
+         background: rgba(255,255,255,0.06);
+         border: 1px solid rgba(255,255,255,0.1);
+         border-radius: 20px;
+         padding: 32px 24px;
+         text-align: center;
+         backdrop-filter: blur(10px);
+         transition: background 0.3s;
+         height: 100%;
+      }
+
+      .step-card:hover {
+         background: rgba(255,255,255,0.1);
+      }
+
+      .step-card .step-number {
+         width: 52px;
+         height: 52px;
+         border-radius: 50%;
+         background: linear-gradient(135deg, #ffd700, #ff9500);
+         color: #1a1a2e;
+         font-size: 20px;
+         font-weight: 900;
+         font-family: 'Montserrat', sans-serif;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         margin: 0 auto 20px;
+         box-shadow: 0 6px 20px rgba(255,149,0,0.35);
+      }
+
+      .step-card .step-icon {
+         font-size: 36px;
+         margin-bottom: 16px;
+         display: block;
+      }
+
+      .step-card h4 {
+         font-family: 'Montserrat', sans-serif;
+         font-size: 16px;
+         font-weight: 800;
+         color: #fff;
+         margin-bottom: 10px;
+         text-transform: uppercase;
+         letter-spacing: 0.5px;
+      }
+
+      .step-card p {
+         color: rgba(255,255,255,0.55);
+         font-size: 14px;
+         line-height: 1.6;
+         margin: 0;
+      }
+
+      /* ---- Toast notification ---- */
+      .lucky-toast {
+         position: fixed;
+         bottom: 30px;
+         right: 30px;
+         z-index: 9999;
+         max-width: 340px;
+         border-radius: 16px;
+         padding: 16px 20px;
+         display: flex;
+         align-items: center;
+         gap: 14px;
+         box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+         transform: translateX(120%);
+         transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .lucky-toast.show {
+         transform: translateX(0);
+      }
+
+      .lucky-toast.success {
+         background: linear-gradient(135deg, #10b981, #059669);
+         color: #fff;
+      }
+
+      .lucky-toast.error {
+         background: linear-gradient(135deg, #ef4444, #dc2626);
+         color: #fff;
+      }
+
+      .lucky-toast .toast-icon {
+         font-size: 28px;
+         flex-shrink: 0;
+      }
+
+      .lucky-toast .toast-text strong {
+         display: block;
+         font-weight: 800;
+         font-size: 14px;
+         margin-bottom: 2px;
+      }
+
+      .lucky-toast .toast-text span {
+         font-size: 12px;
+         opacity: 0.85;
+      }
+
+      /* ---- My Tickets section ---- */
+      .my-tickets-section {
+         padding: 50px 0 70px;
+         background: #fff;
+         display: none;
+      }
+
+      .my-tickets-section.visible {
+         display: block;
+      }
+
+      .ticket-stub {
+         background: linear-gradient(135deg, #302b63 0%, #0f0c29 100%);
+         border-radius: 20px;
+         padding: 24px;
+         color: #fff;
+         position: relative;
+         overflow: hidden;
+         transition: transform 0.3s ease;
+      }
+
+      .ticket-stub:hover {
+         transform: translateY(-4px);
+      }
+
+      .ticket-stub::before {
+         content: '';
+         position: absolute;
+         top: -30px;
+         right: -30px;
+         width: 120px;
+         height: 120px;
+         border-radius: 50%;
+         background: rgba(255,215,0,0.08);
+      }
+
+      .ticket-stub::after {
+         content: '';
+         position: absolute;
+         bottom: -20px;
+         left: -20px;
+         width: 80px;
+         height: 80px;
+         border-radius: 50%;
+         background: rgba(255,255,255,0.05);
+      }
+
+      .ticket-stub .ticket-id {
+         font-size: 11px;
+         letter-spacing: 2px;
+         text-transform: uppercase;
+         color: rgba(255,215,0,0.8);
+         margin-bottom: 8px;
+      }
+
+      .ticket-stub .ticket-dest {
+         font-family: 'Montserrat', sans-serif;
+         font-size: 18px;
+         font-weight: 800;
+         margin-bottom: 4px;
+      }
+
+      .ticket-stub .ticket-date {
+         font-size: 12px;
+         color: rgba(255,255,255,0.55);
+      }
+
+      .ticket-stub .ticket-badge {
+         position: absolute;
+         top: 20px;
+         right: 20px;
+         background: linear-gradient(135deg, #ffd700, #ff9500);
+         color: #1a1a2e;
+         font-size: 10px;
+         font-weight: 900;
+         padding: 4px 12px;
+         border-radius: 20px;
+         letter-spacing: 1px;
+         text-transform: uppercase;
+      }
+
+      /* Responsive */
+      @media (max-width: 767px) {
+         .lucky-draw-hero h1 { font-size: 32px; }
+         .lucky-draw-hero .trophy-icon { font-size: 48px; }
+         .lucky-draw-stats .stats-inner { gap: 30px; }
+         .lucky-draw-section .section-title-main { font-size: 26px; }
+      }
+   </style>
+</head>
+
+<body class="page-lucky-draw">
+<div id="page" class="page">
+
+   <!-- ===================== HEADER ===================== -->
+   <header id="masthead" class="site-header">
+      <div class="bottom-header">
+         <div class="container">
+            <div class="bottom-header-inner d-flex justify-content-between align-items-center">
+               <div class="site-logo text-center">
+                  <h1 class="site-title">
+                     <a href="index">
+                        <img src="assets/images/site-logo.png" alt="Logo" class="default-logo">
+                        <img src="assets/images/site-logo2.png" alt="Logo" class="fixed-logo">
+                     </a>
+                  </h1>
+               </div>
+               <div class="navigation-container d-none d-lg-block">
+                  <nav id="navigation" class="navigation">
+                     <ul>
+                        <li><a href="index">Home</a></li>
+                        <li><a href="about">About Us</a></li>
+                        <li><a href="destination">My Trips</a></li>
+                        <li class="menu-active nav-lucky-draw"><a href="lucky-draw" style="color:#f7b731;font-weight:700;">🏆 Lucky Draw</a></li>
+                        <li><a href="gallery">Gallery</a></li>
+                        <li><a href="contact">Contact Us</a></li>
+                     </ul>
+                  </nav>
+               </div>
+               <div class="header-btn">
+                  <a href="login" class="round-btn nav-btn-login">Login</a>
+                  <a href="#" class="round-btn nav-btn-logout" style="background: linear-gradient(135deg, rgb(217, 56, 58), rgb(183, 28, 28)) !important; color: rgb(255, 255, 255) !important; display: none;">Logout</a>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="mobile-menu-container">
+         <div class="mobile-menu-header d-flex justify-content-between align-items-center">
+            <div class="site-logo text-center">
+               <h1 class="site-title">
+                  <a href="index">
+                     <img src="assets/images/site-logo.png" alt="Logo" class="default-logo">
+                     <img src="assets/images/site-logo2.png" alt="Logo" class="fixed-logo">
+                  </a>
+               </h1>
+            </div>
+         </div>
+      </div>
+   </header>
+
+   <main id="content" class="site-main">
+
+      <!-- ===================== HERO ===================== -->
+      <div class="lucky-draw-hero">
+         <div class="hero-particles">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+         </div>
+         <div class="hero-inner">
+            <span class="trophy-icon">🏆</span>
+            <h1>Win A Free <span>Dream Trip</span></h1>
+            <p>Enter our exclusive lucky draw campaigns and get a chance to win a fully-paid trip to your favourite destination — absolutely free!</p>
+         </div>
+      </div>
+
+      <!-- ===================== STATS BAR ===================== -->
+      <div class="lucky-draw-stats">
+         <div class="container">
+            <div class="stats-inner">
+               <div class="stat-item">
+                  <span class="stat-number" id="stat-campaigns">—</span>
+                  <span class="stat-label">Active Campaigns</span>
+               </div>
+               <div class="stat-item">
+                  <span class="stat-number" id="stat-tickets">—</span>
+                  <span class="stat-label">Tickets Sold</span>
+               </div>
+               <div class="stat-item">
+                  <span class="stat-number">1</span>
+                  <span class="stat-label">Winner Per Draw</span>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <!-- ===================== MY TICKETS (auth only) ===================== -->
+      <section class="my-tickets-section" id="my-tickets-section">
+         <div class="container">
+            <div class="text-center mb-4">
+               <div class="section-badge">🎫 My Tickets</div>
+               <h2 class="lucky-draw-section" style="font-family:'Montserrat',sans-serif;font-size:26px;font-weight:900;color:#1a1a2e;margin:0 0 6px;">
+                  Draws You've Entered
+               </h2>
+               <p style="color:#6b7280;font-size:14px;">Good luck! Winners are picked randomly when the draw closes.</p>
+            </div>
+            <div class="row" id="my-tickets-container">
+               <!-- Populated by JS -->
+            </div>
+         </div>
+      </section>
+
+      <!-- ===================== ACTIVE CAMPAIGNS ===================== -->
+      <section class="lucky-draw-section">
+         <div class="container">
+            <div class="text-center">
+               <div class="section-badge">🎰 Active Now</div>
+               <h2 class="section-title-main">Current Lucky Draw Campaigns</h2>
+               <p class="section-subtitle" id="campaigns-subtitle">Grab your ticket before the draw closes. One ticket per campaign per user.</p>
+            </div>
+
+            <!-- Auth required notice (shown to guests) -->
+            <div id="guest-auth-notice" class="lucky-draw-auth-notice" style="display:none;">
+               <span class="lock-icon">🔐</span>
+               <h3>Login to Enter Lucky Draw</h3>
+               <p>You need to be logged in to purchase tickets and participate in our lucky draws. It's free to join!</p>
+               <a href="login?redirect=lucky-draw" class="round-btn" style="margin-right:10px;">Login Now</a>
+               <a href="register" class="outline-btn" style="border-color:#302b63;color:#302b63;">Register Free</a>
+            </div>
+
+            <!-- Campaigns grid -->
+            <div class="row g-4" id="campaigns-container">
+               <!-- Skeleton loaders -->
+               <div class="col-lg-4 col-md-6" id="skel-1">
+                  <div class="campaign-skeleton">
+                     <div class="skeleton-img"></div>
+                     <div class="skeleton-body">
+                        <div class="skeleton-line" style="width:60%;"></div>
+                        <div class="skeleton-line" style="width:40%;height:12px;"></div>
+                        <div class="skeleton-line" style="width:100%;height:80px;border-radius:14px;margin-top:16px;"></div>
+                        <div class="skeleton-line" style="width:100%;height:44px;border-radius:14px;margin-top:16px;"></div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-md-6" id="skel-2">
+                  <div class="campaign-skeleton">
+                     <div class="skeleton-img"></div>
+                     <div class="skeleton-body">
+                        <div class="skeleton-line" style="width:70%;"></div>
+                        <div class="skeleton-line" style="width:45%;height:12px;"></div>
+                        <div class="skeleton-line" style="width:100%;height:80px;border-radius:14px;margin-top:16px;"></div>
+                        <div class="skeleton-line" style="width:100%;height:44px;border-radius:14px;margin-top:16px;"></div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-md-6" id="skel-3">
+                  <div class="campaign-skeleton">
+                     <div class="skeleton-img"></div>
+                     <div class="skeleton-body">
+                        <div class="skeleton-line" style="width:55%;"></div>
+                        <div class="skeleton-line" style="width:35%;height:12px;"></div>
+                        <div class="skeleton-line" style="width:100%;height:80px;border-radius:14px;margin-top:16px;"></div>
+                        <div class="skeleton-line" style="width:100%;height:44px;border-radius:14px;margin-top:16px;"></div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+
+      <!-- ===================== HOW IT WORKS ===================== -->
+      <section class="how-it-works">
+         <div class="container">
+            <div class="text-center mb-5">
+               <div class="section-badge" style="background:rgba(255,215,0,0.15);color:#ffd700;box-shadow:none;border:1px solid rgba(255,215,0,0.3);">HOW IT WORKS</div>
+               <h2 class="section-title-main">Simple Steps to Win</h2>
+               <p class="section-subtitle">Getting a chance to win your dream trip takes just minutes.</p>
+            </div>
+            <div class="row g-4">
+               <div class="col-lg-3 col-md-6">
+                  <div class="step-card">
+                     <div class="step-number">1</div>
+                     <span class="step-icon">🔑</span>
+                     <h4>Login / Register</h4>
+                     <p>Create a free Gotour account or sign in to your existing account to access the lucky draw section.</p>
+                  </div>
+               </div>
+               <div class="col-lg-3 col-md-6">
+                  <div class="step-card">
+                     <div class="step-number">2</div>
+                     <span class="step-icon">🎰</span>
+                     <h4>Choose a Campaign</h4>
+                     <p>Browse active lucky draw campaigns and pick the destination you'd love to win a free trip to.</p>
+                  </div>
+               </div>
+               <div class="col-lg-3 col-md-6">
+                  <div class="step-card">
+                     <div class="step-number">3</div>
+                     <span class="step-icon">🎫</span>
+                     <h4>Get Your Ticket</h4>
+                     <p>Purchase one ticket per campaign. Each ticket gives you exactly one chance at winning the draw.</p>
+                  </div>
+               </div>
+               <div class="col-lg-3 col-md-6">
+                  <div class="step-card">
+                     <div class="step-number">4</div>
+                     <span class="step-icon">🏆</span>
+                     <h4>Win &amp; Travel!</h4>
+                     <p>When the draw closes, one lucky winner is randomly selected. Winners get a fully-paid trip!</p>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+
+   </main>
+
+   <!-- ===================== FOOTER ===================== -->
+   <footer id="colophon" class="site-footer footer-primary">
+      <div class="top-footer">
+         <div class="container">
+            <div class="upper-footer">
+               <div class="row">
+                  <div class="col-lg-3 col-sm-6">
+                     <aside class="widget widget_text">
+                        <div class="footer-logo">
+                           <a href="index"><img src="assets/images/site-logo.png" alt=""></a>
+                        </div>
+                        <div class="textwidget widget-text">
+                           Gotour is your trusted travel partner offering customized tour packages, exclusive lucky draws, hotel bookings, and unforgettable travel experiences.
+                        </div>
+                     </aside>
+                  </div>
+                  <div class="col-lg-3 col-sm-6">
+                     <aside class="widget widget_latest_post widget-post-thumb">
+                        <h3 class="widget-title">Links</h3>
+                        <div class="textwidget widget-text">
+                           <ul>
+                              <li class="mb-0 pb-2"><a href="index"><i aria-hidden="true" class="icon icon-chevron-right-circle"></i> Home</a></li>
+                              <li class="mb-0 pb-2"><a href="about"><i aria-hidden="true" class="icon icon-chevron-right-circle"></i> About Us</a></li>
+                              <li class="mb-0 pb-2"><a href="destination"><i aria-hidden="true" class="icon icon-chevron-right-circle"></i> My Trips</a></li>
+                              <li class="mb-0 pb-2"><a href="lucky-draw"><i aria-hidden="true" class="icon icon-chevron-right-circle"></i> Lucky Draw</a></li>
+                              <li class="mb-0 pb-2"><a href="contact"><i aria-hidden="true" class="icon icon-chevron-right-circle"></i> Contact Us</a></li>
+                           </ul>
+                        </div>
+                     </aside>
+                  </div>
+                  <div class="col-lg-3 col-sm-6">
+                     <aside class="widget widget_text">
+                        <h3 class="widget-title">CONTACT US</h3>
+                        <div class="textwidget widget-text">
+                           <p>Feel free to contact and<br/> reach us !!</p>
+                           <ul>
+                              <li><a href="tel:+911234567890"><i aria-hidden="true" class="icon icon-phone1"></i> +91 0123456789</a></li>
+                              <li><a href="mailto:info@domain.com"><i aria-hidden="true" class="icon icon-envelope1"></i> info@domain.com</a></li>
+                              <li><i aria-hidden="true" class="icon icon-map-marker1"></i> demo place, demo city, 123456</li>
+                           </ul>
+                        </div>
+                     </aside>
+                  </div>
+                  <div class="col-lg-3 col-sm-6">
+                     <aside class="widget">
+                        <h3 class="widget-title">Follow us</h3>
+                        <div class="social-icon">
+                           <ul>
+                              <li><a href="https://www.facebook.com/" target="_blank"><i class="fab fa-facebook-f" aria-hidden="true"></i></a></li>
+                              <li><a href="https://www.twitter.com/" target="_blank"><i class="fab fa-twitter" aria-hidden="true"></i></a></li>
+                              <li><a href="https://www.youtube.com/" target="_blank"><i class="fab fa-youtube" aria-hidden="true"></i></a></li>
+                              <li><a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram" aria-hidden="true"></i></a></li>
+                           </ul>
+                        </div>
+                     </aside>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="bottom-footer">
+         <div class="container">
+            <div class="copy-right text-center">Copyright &copy; 2026 Gotour. All rights reserved.</div>
+         </div>
+      </div>
+   </footer>
+
+   <a id="backTotop" href="#" class="to-top-icon"><i class="fas fa-chevron-up"></i></a>
+
+   <!-- Toast Notification -->
+   <div id="lucky-toast" class="lucky-toast" role="alert" aria-live="polite">
+      <span class="toast-icon" id="toast-icon"></span>
+      <div class="toast-text">
+         <strong id="toast-title"></strong>
+         <span id="toast-body"></span>
+      </div>
+   </div>
+
+</div><!-- /#page -->
+
+<!-- JavaScript -->
+<script src="assets/vendors/jquery/jquery.js"></script>
+<script src="assets/vendors/bootstrap/js/bootstrap.min.js"></script>
+<script src="assets/vendors/slick-nav/jquery.slicknav.js"></script>
+<script src="assets/js/custom.min.js"></script>
+<script src="assets/js/auth.js?v=3.0"></script>
+
+<script>
+   const LD_API_BASE = 'https://go-tour-backend.onrender.com/api/v1';
+
+   // ---- Helpers ----
+   function getImageUrl(url, name = '') {
+      const lowercaseName = String(name).toLowerCase();
+      const isRenderUpload = !url || url.startsWith('/uploads/') || url.startsWith('/tours/media');
+      if (isRenderUpload) {
+         if (lowercaseName.includes('switzerland') || lowercaseName.includes('swiss')) return 'assets/images/img16.jpg';
+         if (lowercaseName.includes('dubai')) return 'assets/images/img2.jpg';
+         if (lowercaseName.includes('kashmir')) return 'assets/images/img10.jpg';
+         if (lowercaseName.includes('bali')) return 'assets/images/img1.jpg';
+         if (lowercaseName.includes('japan')) return 'assets/images/img3.jpg';
+         if (lowercaseName.includes('france') || lowercaseName.includes('paris')) return 'assets/images/img9.jpg';
+      }
+      if (!url) return 'assets/images/img1.jpg';
+      if (url.startsWith('/uploads/') || url.startsWith('/tours/media')) return `https://go-tour-backend.onrender.com${url}`;
+      return url;
+   }
+
+   function showToast(type, title, body) {
+      const toast = document.getElementById('lucky-toast');
+      const icon = document.getElementById('toast-icon');
+      const titleEl = document.getElementById('toast-title');
+      const bodyEl = document.getElementById('toast-body');
+      toast.className = `lucky-toast ${type}`;
+      icon.textContent = type === 'success' ? '🎉' : '❌';
+      titleEl.textContent = title;
+      bodyEl.textContent = body;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 4500);
+   }
+
+   // ---- Countdown timer logic ----
+   const activeCountdowns = {};
+
+   function startCountdown(endDate, containerId, isUpcoming) {
+      if (activeCountdowns[containerId]) clearInterval(activeCountdowns[containerId]);
+
+      function tick() {
+         const now = new Date();
+         const end = new Date(endDate);
+         const diff = end - now;
+
+         const container = document.getElementById(containerId);
+         if (!container) { clearInterval(activeCountdowns[containerId]); return; }
+
+         if (diff <= 0) {
+            if (isUpcoming) {
+               // Dynamic transition to Live without full page reload
+               initLuckyDrawPage();
+            } else {
+               container.innerHTML = '<div style="text-align:center;color:#6b7280;font-size:13px;font-weight:600;">Draw Closed</div>';
+            }
+            clearInterval(activeCountdowns[containerId]);
+            return;
+         }
+
+         const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+         const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+         const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+         const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+         container.innerHTML = `
+            <div class="time-unit"><span class="time-value">${String(d).padStart(2,'0')}</span><span class="time-label">Days</span></div>
+            <div class="time-unit"><span class="time-value">${String(h).padStart(2,'0')}</span><span class="time-label">Hrs</span></div>
+            <div class="time-unit"><span class="time-value">${String(m).padStart(2,'0')}</span><span class="time-label">Min</span></div>
+            <div class="time-unit"><span class="time-value">${String(s).padStart(2,'0')}</span><span class="time-label">Sec</span></div>
+         `;
+      }
+      tick();
+      activeCountdowns[containerId] = setInterval(tick, 1000);
+   }
+
+   // ---- Fetch active campaigns ----
+   async function fetchActiveCampaigns() {
+      try {
+         const res = await fetch(`${LD_API_BASE}/lucky-draws`);
+         if (!res.ok) throw new Error('Failed to fetch');
+         const data = await res.json();
+         return data.data || [];
+      } catch(e) {
+         console.error('Lucky draws fetch error:', e);
+         return [];
+      }
+   }
+
+   // ---- Fetch campaign detail (to check has_ticket) ----
+   async function fetchCampaignDetail(id) {
+      try {
+         const token = localStorage.getItem('api_token');
+         const headers = { 'Accept': 'application/json' };
+         if (token) headers['Authorization'] = `Bearer ${token}`;
+         const res = await fetch(`${LD_API_BASE}/lucky-draws/${id}`, { headers });
+         if (!res.ok) throw new Error('Failed');
+         const data = await res.json();
+         return data.data;
+      } catch(e) {
+         return null;
+      }
+   }
+
+   // ---- Buy ticket ----
+   async function buyTicket(drawId, btnEl) {
+      if (!isAuthenticated()) {
+         window.location.href = 'login?redirect=lucky-draw';
+         return;
+      }
+
+      btnEl.disabled = true;
+      const origHtml = btnEl.innerHTML;
+      btnEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+      try {
+         const token = localStorage.getItem('api_token');
+         const res = await fetch(`${LD_API_BASE}/lucky-draws/${drawId}/tickets`, {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
+               'Accept': 'application/json',
+               'Authorization': `Bearer ${token}`
+            }
+         });
+
+         const data = await res.json();
+
+         if (!res.ok) {
+            throw new Error(data.message || 'Could not purchase ticket');
+         }
+
+         // Update button to "Entered"
+         btnEl.innerHTML = '<i class="fas fa-check-circle"></i> You\'re In The Draw!';
+         btnEl.classList.add('already-entered');
+         btnEl.disabled = true;
+
+         showToast('success', 'Ticket Purchased! 🎫', 'You\'re officially entered. Good luck!');
+
+         // Refresh My Tickets section
+         loadMyTickets();
+
+      } catch(err) {
+         btnEl.disabled = false;
+         btnEl.innerHTML = origHtml;
+         showToast('error', 'Purchase Failed', err.message || 'Something went wrong. Please try again.');
+      }
+   }
+
+   // ---- Render campaign card ----
+   function renderCampaignCard(draw, hasTicket, loggedIn) {
+      const dest = draw.destination || {};
+      const imgUrl = getImageUrl(dest.image_url, dest.title || dest.name || '');
+      const destName = dest.title || dest.name || 'Mystery Destination';
+      const destLoc  = dest.location || '';
+      const price    = parseFloat(draw.ticket_price || 0);
+      const countdownId = `countdown-${draw.id}`;
+
+      const now = new Date();
+      const start = new Date(draw.start_date);
+      const isUpcoming = now < start;
+
+      let statusBadgeHtml = isUpcoming
+         ? `<div class="status-badge upcoming">● UPCOMING</div>`
+         : `<div class="status-badge active">● LIVE</div>`;
+
+      let countdownLabel = isUpcoming
+         ? `<div class="countdown-label"><i class="fas fa-clock"></i> Starts In</div>`
+         : `<div class="countdown-label"><i class="fas fa-hourglass-half"></i> Draw Closes In</div>`;
+
+      let ctaHtml;
+      if (isUpcoming) {
+         const formattedStart = start.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+         ctaHtml = `<button class="btn-buy-ticket upcoming" style="background:#6b7280!important;color:#fff!important;cursor:default;" disabled>
+            <i class="fas fa-lock"></i> Opens ${formattedStart}
+         </button>`;
+      } else if (hasTicket) {
+         ctaHtml = `<button class="btn-buy-ticket already-entered" disabled>
+            <i class="fas fa-check-circle"></i> You're In The Draw!
+         </button>`;
+      } else if (loggedIn) {
+         ctaHtml = `<button class="btn-buy-ticket" id="btn-draw-${draw.id}" onclick="buyTicket(${draw.id}, this)">
+            <i class="fas fa-ticket-alt"></i> Get My Ticket – ₹${price.toLocaleString()}
+         </button>`;
+      } else {
+         ctaHtml = `<a href="login?redirect=lucky-draw" class="btn-buy-ticket">
+            <i class="fas fa-lock"></i> Login to Enter – ₹${price.toLocaleString()}
+         </a>`;
+      }
+
+      return `
+         <div class="col-lg-4 col-md-6">
+            <div class="campaign-card">
+               <div class="card-image">
+                  <img src="${imgUrl}" alt="${destName}" loading="lazy">
+                  <div class="image-overlay"></div>
+                  <div class="prize-badge">🏆 WIN FREE TRIP</div>
+                  ${statusBadgeHtml}
+                  <div class="ticket-price-badge">
+                     <span class="price-label">Ticket Price</span>
+                     <span class="price-value">₹${price.toLocaleString()}</span>
+                  </div>
+               </div>
+               <div class="card-body-content">
+                  <h3 class="campaign-destination">${destName}</h3>
+                  ${destLoc ? `<p class="campaign-location"><i class="fas fa-map-marker-alt"></i> ${destLoc}</p>` : ''}
+
+                  <div class="countdown-wrap">
+                     ${countdownLabel}
+                     <div class="countdown-timer" id="${countdownId}">
+                        <div class="time-unit"><span class="time-value" style="background:rgba(255,255,255,0.5);">--</span><span class="time-label">Days</span></div>
+                     </div>
+                  </div>
+
+                  ${ctaHtml}
+               </div>
+            </div>
+         </div>
+      `;
+   }
+
+   // ---- Load My Tickets ----
+   async function loadMyTickets() {
+      if (!localStorage.getItem('api_token')) return;
+      const section = document.getElementById('my-tickets-section');
+      const container = document.getElementById('my-tickets-container');
+      if (!section || !container) return;
+
+      // Fetch all active draws and check which ones the user has entered
+      const draws = await fetchActiveCampaigns();
+      const enteredDraws = [];
+
+      for (const draw of draws) {
+         const detail = await fetchCampaignDetail(draw.id);
+         if (detail && detail.has_ticket) {
+            enteredDraws.push({ draw, detail });
+         }
+      }
+
+      if (enteredDraws.length === 0) {
+         section.classList.remove('visible');
+         return;
+      }
+
+      section.classList.add('visible');
+      container.innerHTML = enteredDraws.map(({ draw }) => {
+         const dest = draw.destination || {};
+         const destName = dest.title || dest.name || 'Mystery Destination';
+         const endDate = new Date(draw.end_date);
+         const endStr = endDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+         return `
+            <div class="col-lg-4 col-md-6 mb-4">
+               <div class="ticket-stub">
+                  <div class="ticket-badge">✓ Entered</div>
+                  <div class="ticket-id">Ticket #${draw.id} · Lucky Draw</div>
+                  <div class="ticket-dest">${destName}</div>
+                  <div class="ticket-date"><i class="fas fa-calendar-alt" style="margin-right:5px;opacity:0.6;"></i>Draw closes: ${endStr}</div>
+               </div>
+            </div>
+         `;
+      }).join('');
+   }
+
+   // ---- Main init ----
+   async function initLuckyDrawPage() {
+
+      const container = document.getElementById('campaigns-container');
+      const guestNotice = document.getElementById('guest-auth-notice');
+      const subtitle = document.getElementById('campaigns-subtitle');
+
+      // Read token directly from localStorage — most reliable check
+      // (same key used by auth.js loginUser / registerUser)
+      const token = localStorage.getItem('api_token');
+      const loggedIn = !!token;
+
+      // Show guest notice ONLY if not logged in; hide it explicitly if logged in
+      if (guestNotice) {
+         if (!loggedIn) {
+            guestNotice.style.display = 'block';
+            if (subtitle) subtitle.textContent = 'Login and grab your ticket before the draw closes. One ticket per campaign per user.';
+         } else {
+            guestNotice.style.display = 'none';
+            if (subtitle) subtitle.textContent = 'Grab your ticket before the draw closes. One ticket per campaign per user.';
+         }
+      }
+
+      // Fetch campaigns
+      const draws = await fetchActiveCampaigns();
+
+      // Remove skeleton loaders
+      ['skel-1','skel-2','skel-3'].forEach(id => {
+         const el = document.getElementById(id);
+         if (el) el.remove();
+      });
+
+      // Update stats
+      document.getElementById('stat-campaigns').textContent = draws.length;
+      document.getElementById('stat-tickets').textContent   = draws.length > 0 ? draws.length + '00+' : '0';
+
+      if (draws.length === 0) {
+         container.innerHTML = `
+            <div class="col-12">
+               <div class="no-draws-state">
+                  <span class="state-icon">🎰</span>
+                  <h3>No Active Draws Right Now</h3>
+                  <p>Check back soon! Our team launches new lucky draw campaigns regularly. Subscribe to our newsletter to never miss a chance.</p>
+               </div>
+            </div>
+         `;
+         return;
+      }
+
+      // For logged-in users, fetch ticket status for all draws in parallel
+      let ticketStatuses = {};
+      if (loggedIn) {
+         const details = await Promise.all(draws.map(d => fetchCampaignDetail(d.id)));
+         draws.forEach((d, i) => {
+            ticketStatuses[d.id] = details[i]?.has_ticket || false;
+         });
+      }
+
+      // Render all cards — pass loggedIn so renderCampaignCard doesn't re-check auth
+      container.innerHTML = draws.map(draw => renderCampaignCard(draw, ticketStatuses[draw.id] || false, loggedIn)).join('');
+
+      // Start countdowns
+      draws.forEach(draw => {
+         const now = new Date();
+         const start = new Date(draw.start_date);
+         const isUpcoming = now < start;
+         const targetDate = isUpcoming ? draw.start_date : draw.end_date;
+         startCountdown(targetDate, `countdown-${draw.id}`, isUpcoming);
+      });
+
+      // Load My Tickets section (for logged-in users who already have tickets)
+      if (loggedIn) {
+         const enteredDrawIds = Object.keys(ticketStatuses).filter(id => ticketStatuses[id]);
+         if (enteredDrawIds.length > 0) {
+            const section = document.getElementById('my-tickets-section');
+            const myContainer = document.getElementById('my-tickets-container');
+            if (section && myContainer) {
+               section.classList.add('visible');
+               myContainer.innerHTML = enteredDrawIds.map(id => {
+                  const draw = draws.find(d => String(d.id) === String(id));
+                  if (!draw) return '';
+                  const dest = draw.destination || {};
+                  const destName = dest.title || dest.name || 'Mystery Destination';
+                  const endDate = new Date(draw.end_date);
+                  const endStr = endDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+                  return `
+                     <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="ticket-stub">
+                           <div class="ticket-badge">✓ Entered</div>
+                           <div class="ticket-id">Draw #${draw.id} · Lucky Ticket</div>
+                           <div class="ticket-dest">${destName}</div>
+                           <div class="ticket-date"><i class="fas fa-calendar-alt" style="margin-right:5px;opacity:0.6;"></i>Draw closes: ${endStr}</div>
+                        </div>
+                     </div>
+                  `;
+               }).join('');
+            }
+         }
+      }
+   }
+
+   document.addEventListener('DOMContentLoaded', initLuckyDrawPage);
+</script>
+
+</body>
+</html>
