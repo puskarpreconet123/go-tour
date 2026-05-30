@@ -65,6 +65,13 @@ class LuckyDrawController extends Controller
             ], 400);
         }
 
+        if (now() < $luckyDraw->start_date) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'This lucky draw campaign has not started yet.'
+            ], 400);
+        }
+
         if (now() > $luckyDraw->end_date) {
             return response()->json([
                 'status' => 'error',
