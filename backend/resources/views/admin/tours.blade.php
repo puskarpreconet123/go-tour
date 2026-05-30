@@ -2,6 +2,24 @@
 
 @section('content')
 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+<style>
+    /* Restore list bullet points and numbers in CKEditor content container which gets stripped by Tailwind Preflight */
+    .ck-content ul, .ck-content ul-list {
+        list-style-type: disc !important;
+        padding-left: 2rem !important;
+        margin-top: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+    .ck-content ol, .ck-content ol-list {
+        list-style-type: decimal !important;
+        padding-left: 2rem !important;
+        margin-top: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+    .ck-content li {
+        display: list-item !important;
+    }
+</style>
 <div class="flex justify-between items-center mb-6">
     <div>
         <h2 class="text-3xl font-bold text-slate-800">Manage Tours</h2>
@@ -125,22 +143,22 @@
     <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-sm transition-opacity" onclick="closeTourDrawer()"></div>
     
     <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
-        <div class="w-screen max-w-2xl bg-white shadow-2xl flex flex-col h-full border-l border-slate-100">
+        <form id="tour-form" action="/admin/tours" method="POST" enctype="multipart/form-data" class="w-screen max-w-2xl bg-white shadow-2xl flex flex-col h-full border-l border-slate-100">
+            @csrf
+            <input type="hidden" id="tour-id" name="id">
             <!-- Header -->
-            <div class="p-6 bg-slate-900 text-white flex justify-between items-center">
+            <div class="p-6 bg-slate-900 text-white flex justify-between items-center flex-shrink-0">
                 <div>
                     <h3 id="drawer-title" class="text-xl font-bold">Add Tour Package</h3>
                     <p class="text-xs text-slate-400 mt-1">Provide pricing, locations, description, and images.</p>
                 </div>
-                <button onclick="closeTourDrawer()" class="text-slate-400 hover:text-white transition-colors bg-white/10 rounded-full p-1.5 flex items-center justify-center">
+                <button type="button" onclick="closeTourDrawer()" class="text-slate-400 hover:text-white transition-colors bg-white/10 rounded-full p-1.5 flex items-center justify-center">
                     <span class="material-symbols-outlined text-sm">close</span>
                 </button>
             </div>
 
             <!-- Scrollable Form Body -->
-            <form id="tour-form" action="/admin/tours" method="POST" enctype="multipart/form-data" class="flex-1 overflow-y-auto p-6 space-y-6">
-                @csrf
-                <input type="hidden" id="tour-id" name="id">
+            <div class="flex-1 overflow-y-auto p-6 space-y-6">
 
                 <!-- Title & Category -->
                 <div class="grid grid-cols-2 gap-4">
@@ -273,13 +291,14 @@
                     </div>
                 </div>
 
-                <!-- Footer / Action Buttons -->
-                <div class="bg-slate-50 border-t border-slate-100 p-6 flex justify-end gap-3 sticky bottom-0 -mx-6 -mb-6">
-                    <button type="button" onclick="closeTourDrawer()" class="bg-slate-200 text-slate-800 hover:bg-slate-300 font-semibold px-5 py-2.5 rounded-xl transition-colors text-sm">Cancel</button>
-                    <button type="submit" class="bg-gradient-to-r from-red-700 to-red-600 hover:from-red-800 hover:to-red-700 text-white font-semibold px-6 py-2.5 rounded-xl transition-all duration-200 shadow-md shadow-red-700/20 text-sm">Save Package</button>
-                </div>
-            </form>
-        </div>
+            </div>
+
+            <!-- Footer / Action Buttons -->
+            <div class="bg-slate-50 border-t border-slate-100 p-6 flex justify-end gap-3 flex-shrink-0">
+                <button type="button" onclick="closeTourDrawer()" class="bg-slate-200 text-slate-800 hover:bg-slate-300 font-semibold px-5 py-2.5 rounded-xl transition-colors text-sm">Cancel</button>
+                <button type="submit" class="bg-gradient-to-r from-red-700 to-red-600 hover:from-red-800 hover:to-red-700 text-white font-semibold px-6 py-2.5 rounded-xl transition-all duration-200 shadow-md shadow-red-700/20 text-sm">Save Package</button>
+            </div>
+        </form>
     </div>
 </div>
 
