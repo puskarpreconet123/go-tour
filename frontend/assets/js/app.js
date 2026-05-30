@@ -492,7 +492,7 @@ async function initPackageDetailPage() {
                     ticketPriceEl.innerHTML = `
                         <a href="lucky-draw">
                             <i class="fas fa-ticket-alt"></i>
-                            <span>Lucky Draw Ticket: ₹${ticketPrice.toLocaleString()}</span>
+                            <span>Lucky Draw: ₹${ticketPrice.toLocaleString()}</span>
                         </a>
                     `;
 

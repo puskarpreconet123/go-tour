@@ -35,7 +35,7 @@
                 <select name="destination_id" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500">
                     <option value="" disabled selected>Choose a trip...</option>
                     @foreach($destinations as $destination)
-                        <option value="{{ $destination->id }}">{{ $destination->title }} (ID: {{ $destination->id }})</option>
+                        <option value="{{ $destination->id }}">{{ $destination->name }} (ID: {{ $destination->id }})</option>
                     @endforeach
                 </select>
             </div>
@@ -85,7 +85,7 @@
             <tr class="hover:bg-slate-50/55 transition-colors">
                 <td class="p-4 text-sm font-semibold text-gray-500">#{{ $draw->id }}</td>
                 <td class="p-4">
-                    <span class="text-sm font-bold text-gray-800 block">{{ $draw->destination->title ?? 'N/A' }}</span>
+                    <span class="text-sm font-bold text-gray-800 block">{{ $draw->destination->name ?? 'N/A' }}</span>
                     <span class="text-xs text-slate-400">Loc: {{ $draw->destination->location ?? 'N/A' }}</span>
                 </td>
                 <td class="p-4 text-sm font-bold text-slate-700">₹{{ number_format($draw->ticket_price, 2) }}</td>
